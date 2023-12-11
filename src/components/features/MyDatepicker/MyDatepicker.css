@@ -1,0 +1,12 @@
+.date-picker {
+  width: 100%;
+}
+
+/* MyDatepicker.css */
+.custom-datepicker-input::placeholder {
+  color: rgba(
+    0,
+    0,
+    0
+  ) !important; /* Change this to your desired placeholder color */
+}
