@@ -57,6 +57,7 @@ export default function Menu({ open, closeDrawer }: Props) {
                 selected={menu.path === path}
                 to={menu.path}
                 component={Link}
+                onClick={closeDrawer}
               >
                 <ListItemIcon>{menu.icon}</ListItemIcon>
                 <ListItemText primary={menu.name} />
@@ -76,6 +77,7 @@ export default function Menu({ open, closeDrawer }: Props) {
                 selected={menu.path === path}
                 to={menu.path}
                 component={Link}
+                onClick={closeDrawer}
               >
                 <ListItemIcon>{menu.icon}</ListItemIcon>
                 <ListItemText primary={menu.name} />
