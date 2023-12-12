@@ -1,8 +1,8 @@
 import * as React from "react";
 
-type HomePageProps = {
-  //
-};
+// type HomePageProps = {
+//   //
+// };
 
 const HomePage: React.FC<any> = () => {
   return <div>HomePage</div>;

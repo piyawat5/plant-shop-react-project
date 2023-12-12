@@ -1,8 +1,8 @@
 import * as React from "react";
 
-type AdminEditStockPageProps = {
-  //
-};
+// type AdminEditStockPageProps = {
+//   //
+// };
 
 const AdminEditStockPage: React.FC<any> = () => {
   return <div>AdminEditStockPage</div>;

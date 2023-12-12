@@ -1,8 +1,8 @@
 import * as React from "react";
 
-type RegisterPageProps = {
-  //
-};
+// type RegisterPageProps = {
+//   //
+// };
 
 const RegisterPage: React.FC<any> = () => {
   return <div>RegisterPage</div>;

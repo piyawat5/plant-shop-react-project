@@ -1,8 +1,8 @@
 import * as React from "react";
 
-type OrderDetailPageProps = {
-  //
-};
+// type OrderDetailPageProps = {
+//   //
+// };
 
 const OrderDetailPage: React.FC<any> = () => {
   return <div>OrderDetailPage</div>;

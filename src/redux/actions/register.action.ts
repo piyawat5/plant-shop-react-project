@@ -4,10 +4,10 @@ export const registerIsFetching = () => ({
     type: 'type',
 })
 export const registerIsFail = () => ({
-    type: 'type',
+    type: 'type2',
 })
 export const registerIsSuccess = (payload: any) => ({
-    type: 'type',
+    type: 'type3',
     payload
 })
 

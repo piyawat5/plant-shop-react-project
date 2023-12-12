@@ -1,8 +1,8 @@
 import * as React from "react";
 
-type ShopPageProps = {
-  //
-};
+// type ShopPageProps = {
+//   //
+// };
 
 const ShopPage: React.FC<any> = () => {
   return <div>ShopPage</div>;
