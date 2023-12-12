@@ -66,6 +66,7 @@ export default function Navbar({ openDrawer }: Props) {
       sx={{
         width: { md: `calc(100% - ${drawerWidth}px)` },
         ml: { md: `${drawerWidth}px` },
+        color: "white",
       }}
     >
       <Toolbar>
@@ -79,7 +80,7 @@ export default function Navbar({ openDrawer }: Props) {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap component="div">
-          Kiaw Kiaw shop
+          KIAW KIAW
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
 
