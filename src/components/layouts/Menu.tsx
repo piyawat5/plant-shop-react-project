@@ -29,15 +29,15 @@ export default function Menu({ open, closeDrawer }: Props) {
   const path = location.pathname;
 
   const menus: Menus[] = [
-    { name: "Home", path: "/home", icon: <AccountCircle></AccountCircle> },
-    { name: "Shop", path: "/shop", icon: <AccountCircle></AccountCircle> },
+    { name: "หน้าแรก", path: "/home", icon: <AccountCircle></AccountCircle> },
+    { name: "ร้านค้า", path: "/shop", icon: <AccountCircle></AccountCircle> },
     {
-      name: "Transaction",
+      name: "ธุรกรรม",
       path: "/admin-transaction",
       icon: <AccountCircle></AccountCircle>,
     },
     {
-      name: "Stock",
+      name: "จัดการคลัง",
       path: "/admin-stock",
       icon: <AccountCircle></AccountCircle>,
     },
@@ -96,6 +96,7 @@ export default function Menu({ open, closeDrawer }: Props) {
       aria-label="mailbox folders"
     >
       <Drawer
+        disableScrollLock={true}
         variant="temporary"
         open={open}
         onClose={closeDrawer}

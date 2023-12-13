@@ -80,7 +80,7 @@ export default function Navbar({ openDrawer }: Props) {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap component="div">
-          KIAW KIAW
+          เขียว เขียว
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
 

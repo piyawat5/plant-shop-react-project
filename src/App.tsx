@@ -18,7 +18,7 @@ import AdminStockPage from "./components/pages/AdminStockPage";
 import AdminTransactionPage from "./components/pages/AdminTransactionPage";
 import Navbar from "./components/layouts/Navbar";
 import Menu from "./components/layouts/Menu";
-import { PaletteOptions, ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -63,11 +63,11 @@ export default function App() {
       },
     },
     typography: {
-      fontFamily: "Poppins",
+      fontFamily: "Mitr",
       fontWeightLight: 200,
       fontWeightRegular: 300,
-      fontWeightMedium: 500,
-      fontWeightBold: 800,
+      fontWeightMedium: 400,
+      fontWeightBold: 500,
     },
     palette: {
       primary: {

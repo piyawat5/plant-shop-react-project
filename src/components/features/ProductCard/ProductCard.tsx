@@ -26,28 +26,24 @@ const ProductCard: React.FC<ProductCardProps> = ({
       sx={{
         bgcolor: "white",
         width: "220px",
-        height: "280px",
+        height: "260px",
         boxShadow: 3,
         padding: "14px",
         cursor: "pointer",
       }}
     >
       <Stack justifyContent={"center"} gap={"14px"}>
-        <img
-          src={image}
-          alt="tree"
-          style={{ margin: "auto", height: "158px" }}
-        />
+        <img src={image} alt="tree" style={{ height: "158px" }} />
         <Box sx={{ fontSize: "14px", color: theme.palette.grey[500] }}>
-          Stock: {stock}
+          สินค้าในคลัง: {stock} ชิ้น
         </Box>
         <Stack
-          sx={{ fontWeight: 500 }}
+          sx={{ fontWeight: 400 }}
           direction={"row"}
           justifyContent={"space-between"}
         >
-          <Box>Product name</Box>
-          <Box>${price}</Box>
+          <Box>{productName}</Box>
+          <Box>{price} บาท</Box>
         </Stack>
       </Stack>
     </Box>
