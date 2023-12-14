@@ -6,6 +6,9 @@ import { Box, Grid, Skeleton, Stack } from "@mui/material";
 import CategoryCard from "../../features/CategoryCard";
 import { useNavigate } from "react-router-dom";
 import ArticleCard from "../../features/ArticleCard";
+import Modal from "../../features/Modal";
+import { ModalRoleEnum } from "../../features/Modal/Modal";
+import NumberEditor from "../../features/NumberEditor";
 
 // type HomePageProps = {
 //   //
@@ -36,6 +39,8 @@ type Article = {
 
 const HomePage: React.FC<any> = () => {
   const navigate = useNavigate();
+  const [openModal, setOpenModal] = React.useState(false);
+  const [price, setPrice] = React.useState(0);
   const categories: Categories[] = [
     {
       title: "ต้นไม้",
@@ -196,6 +201,9 @@ const HomePage: React.FC<any> = () => {
               <Carousel>
                 {products.map((product, index) => (
                   <ProductCard
+                    handleClick={() => {
+                      setOpenModal(true);
+                    }}
                     key={index}
                     price={product.price}
                     productName={product.productName}
@@ -269,6 +277,65 @@ const HomePage: React.FC<any> = () => {
               </Stack>
             </Box>
           </Stack>
+          <Modal
+            textConfirm="เพิ่มไปยังตระกร้า"
+            role={ModalRoleEnum.confirm}
+            isOpen={openModal}
+            onClose={() => {
+              setOpenModal(false);
+            }}
+            onSubmit={() => {}}
+          >
+            <Stack direction={"column"} alignItems={"center"}>
+              <Box fontSize={20} fontWeight={400}>
+                ต้นหอมจริงๆ
+              </Box>
+              <img
+                height={200}
+                src={`${process.env.PUBLIC_URL}/images/tree2.png`}
+              ></img>
+              <Stack direction={"column"} spacing={2} width={300}>
+                <Box>
+                  <span style={{ fontWeight: 400 }}>รายละเอียด: </span>
+                  <span style={{ fontWeight: 300, color: "grey" }}>
+                    เป็นต้นที่สวยงามจุงเบย
+                  </span>
+                </Box>
+                <Box>
+                  <span style={{ fontWeight: 400 }}>สต็อก: </span>
+
+                  <span style={{ fontWeight: 300, color: "grey" }}>10</span>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box>
+                    <span style={{ fontWeight: 400 }}> ราคา: </span>
+
+                    <span style={{ fontWeight: 300, color: "grey" }}>200</span>
+                  </Box>
+                  <Box
+                    gap={2}
+                    display={"flex"}
+                    flexDirection={"row"}
+                    alignItems={"center"}
+                  >
+                    <Box>จำนวน: </Box>
+                    <NumberEditor
+                      handleValue={(value) => {
+                        setPrice(value);
+                      }}
+                    ></NumberEditor>
+                  </Box>
+                </Box>
+              </Stack>
+            </Stack>
+          </Modal>
         </Box>
       )}
     </Box>

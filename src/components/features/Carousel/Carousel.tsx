@@ -28,7 +28,8 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
       <Box
         ref={scrollContainerRef}
         className="custom-scrollbar"
-        width="615px"
+        maxWidth={615}
+        width={"100%"}
         sx={{ overflowX: "scroll" }}
         padding={"14px"}
         display={"flex"}

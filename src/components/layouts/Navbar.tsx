@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import { Badge, Menu, MenuItem } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function Navbar({ openDrawer }: Props) {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const menuId = "Account-menu";
   const isMenuOpen = Boolean(anchorEl);
@@ -46,6 +48,7 @@ export default function Navbar({ openDrawer }: Props) {
       <MenuItem
         onClick={() => {
           handleMenuClose();
+          navigate("/profile");
         }}
       >
         Profile
@@ -53,6 +56,7 @@ export default function Navbar({ openDrawer }: Props) {
       <MenuItem
         onClick={() => {
           handleMenuClose();
+          navigate("/login");
         }}
       >
         Log out
@@ -84,7 +88,11 @@ export default function Navbar({ openDrawer }: Props) {
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
 
-        <IconButton size="large" color="inherit">
+        <IconButton
+          onClick={() => navigate("/cart")}
+          size="large"
+          color="inherit"
+        >
           <Badge badgeContent={10} color="error">
             <AddShoppingCartIcon></AddShoppingCartIcon>
           </Badge>

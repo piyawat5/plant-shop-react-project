@@ -56,7 +56,7 @@ const Modal: React.FC<ModalProps> = ({
             sx={{ display: "flex", gap: 2, justifyContent: "center", mt: 4 }}
           >
             <Button variant="outlined" onClick={onClose}>
-              Close
+              ยกเลิก
             </Button>
             {role === ModalRoleEnum.confirmDelete && (
               <Button
@@ -74,7 +74,7 @@ const Modal: React.FC<ModalProps> = ({
             {role === ModalRoleEnum.confirm && (
               <Button
                 color="primary"
-                sx={{ color: "white" }}
+                sx={{ color: "white", fontWeight: 300 }}
                 variant="contained"
                 onClick={() => {
                   onSubmit();

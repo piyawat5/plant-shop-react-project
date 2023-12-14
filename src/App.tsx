@@ -19,6 +19,7 @@ import AdminTransactionPage from "./components/pages/AdminTransactionPage";
 import Navbar from "./components/layouts/Navbar";
 import Menu from "./components/layouts/Menu";
 import { ThemeProvider, createTheme } from "@mui/material";
+import EditProfilePage from "./components/pages/EditProfilePage";
 
 const drawerWidth = 240;
 
@@ -127,6 +128,10 @@ export default function App() {
             <Route
               path="/profile"
               element={<ProfilePage></ProfilePage>}
+            ></Route>
+            <Route
+              path="/edit-profile"
+              element={<EditProfilePage></EditProfilePage>}
             ></Route>
             <Route
               path="/payment"
