@@ -9,7 +9,7 @@ type PageNameProps = {
 
 const PageName: React.FC<PageNameProps> = ({ name }) => {
   return (
-    <Box fontSize={36} fontWeight={400}>
+    <Box marginBottom={4} fontSize={36} fontWeight={400}>
       {name}
     </Box>
   );

@@ -40,6 +40,7 @@ const SearchProductName: React.FC<SearchProductNameProps> = ({
   return (
     <Box>
       <TextField
+        sx={{ bgcolor: "white" }}
         label="ค้นหาชื่อสินค้า"
         value={search}
         variant="outlined"
