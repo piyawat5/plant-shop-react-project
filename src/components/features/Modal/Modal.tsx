@@ -48,7 +48,7 @@ const Modal: React.FC<ModalProps> = ({
   }, [isOpen, onClose]);
 
   return (
-    <CSSTransition in={isOpen} timeout={300} classNames="modal" unmountOnExit>
+    <CSSTransition in={isOpen} timeout={150} classNames="modal" unmountOnExit>
       <div className="modal">
         <div className="modal-content" ref={modalRef}>
           {children}

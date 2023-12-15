@@ -25,9 +25,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
       onClick={handleClick}
       sx={{
         bgcolor: "white",
-        width: "220px",
+        // width: "186px",
         height: "260px",
-        boxShadow: 3,
+        boxShadow: 2,
         padding: "14px",
         cursor: "pointer",
       }}

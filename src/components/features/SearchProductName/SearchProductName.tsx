@@ -38,17 +38,16 @@ const SearchProductName: React.FC<SearchProductNameProps> = ({
   }, []);
 
   return (
-    <Box>
-      <TextField
-        sx={{ bgcolor: "white" }}
-        label="ค้นหาชื่อสินค้า"
-        value={search}
-        variant="outlined"
-        onChange={(e) => {
-          setSearch(e.target.value);
-        }}
-      ></TextField>
-    </Box>
+    <TextField
+      sx={{ bgcolor: "white" }}
+      label="ค้นหาชื่อสินค้า"
+      fullWidth
+      value={search}
+      variant="outlined"
+      onChange={(e) => {
+        setSearch(e.target.value);
+      }}
+    ></TextField>
   );
 };
 

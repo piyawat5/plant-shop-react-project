@@ -19,7 +19,7 @@ const ProductTypeDropdown: React.FC<ProductTypeDropdownProps> = ({
     handleValue(value);
   }, [value]);
   return (
-    <Box sx={{ minWidth: 236 }}>
+    <Box sx={{ minWidth: 236 }} width={"100%"}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">ประเภท</InputLabel>
         <Select

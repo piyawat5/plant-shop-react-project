@@ -1,24 +1,9 @@
 import * as React from "react";
 import PageName from "../../features/PageName";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Stack,
-  TextField,
-} from "@mui/material";
-import {
-  Field,
-  Form,
-  Formik,
-  FormikErrors,
-  FormikProps,
-  FormikValues,
-} from "formik";
+import { Box, Button, Stack, TextField } from "@mui/material";
+import { Formik, FormikProps } from "formik";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../..";
-import { stringify } from "querystring";
+// import { useAppDispatch } from "../../..";
 import MyDatepicker from "../../features/MyDatepicker";
 
 // type RegisterPageProps = {
@@ -31,7 +16,7 @@ const RegisterPage: React.FC<any> = () => {
   // const stockReducers = useSelector(
   //   (state: RootReducers) => state.stockReducer
   // );
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   const Form = ({
     handleSubmit,
@@ -44,8 +29,9 @@ const RegisterPage: React.FC<any> = () => {
       <form action="" onSubmit={handleSubmit}>
         <Stack
           borderRadius={"6px"}
-          width={428}
-          padding={"48px"}
+          maxWidth={428}
+          width={"100%"}
+          padding={"36px 20px"}
           bgcolor={"white"}
           direction="column"
           spacing={4}
@@ -141,7 +127,7 @@ const RegisterPage: React.FC<any> = () => {
     password: "",
   };
   return (
-    <Box paddingX={"50px"}>
+    <Box>
       <Box display={"flex"} alignItems={"center"} flexDirection={"column"}>
         <Box>
           <PageName name="สมัครสมาชิก ฟรี!"></PageName>

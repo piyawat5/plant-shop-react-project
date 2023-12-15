@@ -40,7 +40,6 @@ type Article = {
 const HomePage: React.FC<any> = () => {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = React.useState(false);
-  const [price, setPrice] = React.useState(0);
   const categories: Categories[] = [
     {
       title: "ต้นไม้",
@@ -175,7 +174,7 @@ const HomePage: React.FC<any> = () => {
   }, []);
 
   return (
-    <Box paddingX={"50px"}>
+    <Box>
       {fetch ? (
         <Skeleton height={500}></Skeleton>
       ) : (
@@ -326,11 +325,7 @@ const HomePage: React.FC<any> = () => {
                     alignItems={"center"}
                   >
                     <Box>จำนวน: </Box>
-                    <NumberEditor
-                      handleValue={(value) => {
-                        setPrice(value);
-                      }}
-                    ></NumberEditor>
+                    <NumberEditor handleValue={(value) => {}}></NumberEditor>
                   </Box>
                 </Box>
               </Stack>

@@ -1,13 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Stack, TextField, useMediaQuery } from "@mui/material";
 import * as React from "react";
 import PageName from "../../features/PageName";
 import { useNavigate } from "react-router-dom";
@@ -27,6 +19,7 @@ const EditProfilePage: React.FC<any> = () => {
     address: "",
   };
   const navigate = useNavigate();
+  const xs = useMediaQuery("(max-width: 600px)");
 
   const Form = ({
     handleSubmit,
@@ -38,14 +31,25 @@ const EditProfilePage: React.FC<any> = () => {
     return (
       <form action="" onSubmit={handleSubmit}>
         <Stack
-          borderRadius={"6px"}
-          padding={"48px"}
-          bgcolor={"white"}
-          direction="column"
-          spacing={4}
           position={"relative"}
-          zIndex={10}
+          p={xs ? 1 : 4}
+          pt={15}
+          mt={20}
+          borderRadius={4}
+          bgcolor={"white"}
+          sx={{ minWidth: 275 }}
+          direction={"column"}
+          justifyContent={"center"}
+          spacing={2}
         >
+          <Box sx={{ position: "absolute", top: -100, left: 30 }}>
+            <img
+              style={{ outline: "12px solid #EFEFEF", borderRadius: 100 }}
+              height={200}
+              width={200}
+              src={`${process.env.PUBLIC_URL}/images/avatar.png`}
+            ></img>
+          </Box>
           <UploadImage
             handleUrl={(url) => {
               setFieldValue("image", url);
@@ -100,38 +104,18 @@ const EditProfilePage: React.FC<any> = () => {
     );
   };
   return (
-    <Box paddingX={"50px"}>
+    <Box>
       <PageName name="แก้ไขโปรไฟล์"></PageName>
-      <Stack
-        position={"relative"}
-        p={4}
-        pt={15}
-        mt={20}
-        borderRadius={4}
-        bgcolor={"white"}
-        sx={{ minWidth: 275 }}
-        direction={"column"}
-        justifyContent={"center"}
-        spacing={2}
+
+      <Formik
+        initialValues={initial}
+        onSubmit={async (value, { setSubmitting }) => {
+          console.log(value);
+          setSubmitting(false);
+        }}
       >
-        <Box sx={{ position: "absolute", bottom: 180, top: -100 }}>
-          <img
-            style={{ outline: "12px solid #EFEFEF", borderRadius: 100 }}
-            height={200}
-            width={200}
-            src={`${process.env.PUBLIC_URL}/images/avatar.png`}
-          ></img>
-        </Box>
-        <Formik
-          initialValues={initial}
-          onSubmit={async (value, { setSubmitting }) => {
-            console.log(value);
-            setSubmitting(false);
-          }}
-        >
-          {(props) => Form(props)}
-        </Formik>
-      </Stack>
+        {(props) => Form(props)}
+      </Formik>
     </Box>
   );
 };

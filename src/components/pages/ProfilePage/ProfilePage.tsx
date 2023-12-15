@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography, useMediaQuery } from "@mui/material";
 import * as React from "react";
 import PageName from "../../features/PageName";
 import { useNavigate } from "react-router-dom";
@@ -9,13 +9,14 @@ import { useNavigate } from "react-router-dom";
 // };
 
 const ProfilePage: React.FC<any> = () => {
+  const xs = useMediaQuery("(max-width: 600px)");
   const navigate = useNavigate();
   return (
-    <Box paddingX={"50px"}>
+    <Box>
       <PageName name="โปรไฟล์"></PageName>
       <Stack
         position={"relative"}
-        p={4}
+        p={xs ? 1 : 4}
         pt={15}
         mt={20}
         borderRadius={4}
@@ -25,7 +26,7 @@ const ProfilePage: React.FC<any> = () => {
         justifyContent={"center"}
         spacing={2}
       >
-        <Box sx={{ position: "absolute", bottom: 180, top: -100 }}>
+        <Box sx={{ position: "absolute", top: -100, left: 30 }}>
           <img
             style={{ outline: "12px solid #EFEFEF", borderRadius: 100 }}
             height={200}

@@ -18,13 +18,14 @@ import AdminStockPage from "./components/pages/AdminStockPage";
 import AdminTransactionPage from "./components/pages/AdminTransactionPage";
 import Navbar from "./components/layouts/Navbar";
 import Menu from "./components/layouts/Menu";
-import { ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
 import EditProfilePage from "./components/pages/EditProfilePage";
 
 const drawerWidth = 240;
 
 export default function App() {
   const [open, setOpen] = React.useState(false);
+  const xs = useMediaQuery("(max-width:600px)");
 
   const theme = createTheme({
     components: {
@@ -110,7 +111,8 @@ export default function App() {
           component="main"
           sx={{
             flexGrow: 1,
-            p: 3,
+            py: 3,
+            paddingX: xs ? "12px" : "74px",
             width: { md: `calc(100% - ${drawerWidth}px)` },
           }}
         >
@@ -151,7 +153,7 @@ export default function App() {
               element={<AdminAddStockPage></AdminAddStockPage>}
             ></Route>
             <Route
-              path="/admin-edit-stock"
+              path="/admin-edit-stock/:id"
               element={<AdminEditStockPage></AdminEditStockPage>}
             ></Route>
             <Route
