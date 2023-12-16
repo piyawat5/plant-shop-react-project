@@ -17,7 +17,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { Add, Clear } from "@mui/icons-material";
-import SearchProductName from "../../features/SearchProductName";
+import SearchFilter from "../../features/SearchFilter";
 import ProductTypeDropdown from "../../features/ProductTypeDropdown";
 import SearchProductPrice from "../../features/SearchProductPrice";
 import PageName from "../../features/PageName";
@@ -224,9 +224,8 @@ const AdminStockPage: React.FC<any> = () => {
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <PageName name={"คลังสินค้า"}></PageName>
       <Stack flexWrap={"wrap"} direction={"row"} gap={2} marginBottom={4}>
-        <SearchProductName
-          handleValue={setSearchProductName}
-        ></SearchProductName>
+        SearchFilter
+        <SearchFilter handleValue={setSearchProductName}></SearchFilter>
         <ProductTypeDropdown
           handleValue={setSearchProductType}
         ></ProductTypeDropdown>
@@ -266,7 +265,6 @@ const AdminStockPage: React.FC<any> = () => {
 
       {role === ModalRoleEnum.general ? (
         <Modal
-          textConfirm="เพิ่มไปยังตระกร้า"
           role={ModalRoleEnum.general}
           isOpen={isOpen}
           onClose={() => {

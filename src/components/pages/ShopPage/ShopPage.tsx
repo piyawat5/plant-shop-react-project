@@ -3,7 +3,7 @@ import { Box, Stack } from "@mui/material";
 import * as React from "react";
 import Pagination from "@mui/material/Pagination";
 import ProductTypeDropdown from "../../features/ProductTypeDropdown";
-import SearchProductName from "../../features/SearchProductName";
+import SearchFilter from "../../features/SearchFilter";
 import SearchProductPrice from "../../features/SearchProductPrice";
 import PageName from "../../features/PageName";
 import usePagination from "../../features/Pagination";
@@ -152,9 +152,8 @@ const ShopPage: React.FC<any> = () => {
       <div ref={ref}></div>
       <PageName name="หน้าร้าน"></PageName>
       <Stack flexWrap={"wrap"} direction={"row"} gap={2} marginBottom={8}>
-        <SearchProductName
-          handleValue={setSearchProductName}
-        ></SearchProductName>
+        SearchFilter
+        <SearchFilter handleValue={setSearchProductName}></SearchFilter>
         <ProductTypeDropdown
           handleValue={setSearchProductType}
         ></ProductTypeDropdown>
