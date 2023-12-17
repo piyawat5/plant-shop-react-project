@@ -6,6 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { OutlinedInput } from "@mui/material";
+import { OrderStatusEnum } from "../../types/OrderStatus";
 
 type OrderStatusDropdownProps = {
   handleValue: (value: string) => void;
@@ -33,10 +34,15 @@ const OrderStatusDropdown: React.FC<OrderStatusDropdownProps> = ({
           }}
         >
           <MenuItem value={""}>ทั้งหมด</MenuItem>
-          <MenuItem value={"NOT_PAID"}>ยังไม่ได้ชำระเงิน</MenuItem>
-          <MenuItem value={"PAID"}>ชำระเงินแล้ว</MenuItem>
-          <MenuItem value={"VERIFY"}>รอการตรวจสอบกำชำระเงิน</MenuItem>
-          <MenuItem value={"COMPLETED"}>สินค้ากำลังจัดส่ง</MenuItem>
+          <MenuItem value={OrderStatusEnum.NOTPAID}>ยังไม่ได้ชำระเงิน</MenuItem>
+          <MenuItem value={OrderStatusEnum.PAID}>ชำระเงินแล้ว</MenuItem>
+          <MenuItem value={OrderStatusEnum.VERIFY}>
+            รอการตรวจสอบกำชำระเงิน
+          </MenuItem>
+
+          <MenuItem value={OrderStatusEnum.COMPLETE}>
+            สินค้ากำลังจัดส่ง
+          </MenuItem>
         </Select>
       </FormControl>
     </Box>

@@ -79,6 +79,7 @@ const OrderDetailPage: React.FC<any> = () => {
       >
         {products.map((product, index) => (
           <ProductOrderCard
+            viewMode
             key={index}
             productName={product.productName}
             price={product.price}

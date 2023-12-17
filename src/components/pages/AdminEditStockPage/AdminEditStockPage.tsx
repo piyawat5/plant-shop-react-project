@@ -9,7 +9,7 @@ import StockForm from "../../features/StockForm";
 
 const AdminEditStockPage: React.FC<any> = () => {
   const initial = {
-    productName: "",
+    productName: "จุ๊กกรู้",
     price: 1500,
     quantity: 300,
     image: "image/image/image",

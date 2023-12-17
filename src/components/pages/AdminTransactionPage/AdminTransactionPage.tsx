@@ -10,6 +10,8 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import SearchFilter from "../../features/SearchFilter";
 import PageName from "../../features/PageName";
 import OrderStatusDropdown from "../../features/OrderStatusDropdown";
+import OrderStatus from "../../features/OrderStatus";
+import { OrderStatusEnum } from "../../types/OrderStatus";
 
 const AdminTransactionPage: React.FC<any> = () => {
   const [searchCustomer, setSearchCustomer] = React.useState("");
@@ -31,7 +33,7 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       id: 1,
       customerId: 1,
-      status: "CURRENT",
+      status: OrderStatusEnum.VERIFY,
       name: "ปิยะวัตร",
       total: 15000,
       date: "12-12-2022",
@@ -39,7 +41,7 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       id: 2,
       customerId: 1,
-      status: "CURRENT",
+      status: OrderStatusEnum.NOTPAID,
       name: "ปิยะวัตร",
       total: 15000,
       date: "12-12-2022",
@@ -47,7 +49,7 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       id: 3,
       customerId: 1,
-      status: "CURRENT",
+      status: OrderStatusEnum.PAID,
       name: "ปิยะวัตร",
       total: 15000,
       date: "12-12-2022",
@@ -55,7 +57,7 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       id: 4,
       customerId: 1,
-      status: "CURRENT",
+      status: OrderStatusEnum.COMPLETE,
       name: "ปิยะวัตร",
       total: 15000,
       date: "12-12-2022",
@@ -63,7 +65,7 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       id: 5,
       customerId: 1,
-      status: "CURRENT",
+      status: OrderStatusEnum.PAID,
       name: "ปิยะวัตร",
       total: 15000,
       date: "12-12-2022",
@@ -71,23 +73,7 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       id: 6,
       customerId: 1,
-      status: "CURRENT",
-      name: "ปิยะวัตร",
-      total: 15000,
-      date: "12-12-2022",
-    },
-    {
-      id: 7,
-      customerId: 1,
-      status: "CURRENT",
-      name: "ปิยะวัตร",
-      total: 15000,
-      date: "12-12-2022",
-    },
-    {
-      id: 8,
-      customerId: 1,
-      status: "CURRENT",
+      status: OrderStatusEnum.COMPLETE,
       name: "ปิยะวัตร",
       total: 15000,
       date: "12-12-2022",
@@ -113,7 +99,12 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       field: "status",
       headerName: "สถานะ",
-      width: 150,
+      width: 200,
+      renderCell: ({ value }: GridRenderCellParams) => (
+        <Box textAlign={"center"}>
+          <OrderStatus name={value}></OrderStatus>
+        </Box>
+      ),
     },
     {
       field: "name",

@@ -37,9 +37,9 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ handleValue }) => {
 
   return (
     <TextField
+      fullWidth
       sx={{ bgcolor: "white" }}
       label="ค้นหาชื่อสินค้า"
-      fullWidth
       value={search}
       variant="outlined"
       onChange={(e) => {

@@ -8,7 +8,9 @@ type ProductOrderCardProps = {
   quantity: number;
   price: number;
   image: string;
-  handleClick?: () => void;
+  viewMode?: boolean;
+  handleClickProduct?: () => void;
+  handleClickDelete?: () => void;
 };
 
 const ProductOrderCard: React.FC<ProductOrderCardProps> = ({
@@ -16,12 +18,13 @@ const ProductOrderCard: React.FC<ProductOrderCardProps> = ({
   quantity,
   price,
   image,
-  handleClick,
+  viewMode = false,
+  handleClickProduct,
+  handleClickDelete,
 }) => {
   return (
     <Stack
-      sx={{ cursor: "pointer" }}
-      onClick={handleClick}
+      sx={{ cursor: viewMode ? "inherit" : "pointer" }}
       direction={"row"}
       alignItems={"center"}
       width={"100%"}
@@ -29,6 +32,7 @@ const ProductOrderCard: React.FC<ProductOrderCardProps> = ({
       maxWidth={571}
     >
       <Stack
+        onClick={handleClickProduct}
         width={"100%"}
         boxShadow={2}
         bgcolor={"white"}
@@ -51,7 +55,7 @@ const ProductOrderCard: React.FC<ProductOrderCardProps> = ({
           </Stack>
         </Stack>
       </Stack>
-      <Box>D</Box>
+      {!viewMode && <Box onClick={handleClickDelete}>D</Box>}
     </Stack>
   );
 };

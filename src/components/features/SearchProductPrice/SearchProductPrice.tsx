@@ -35,10 +35,11 @@ const SearchProductPrice: React.FC<SearchProductPriceProps> = ({
     }
   }, [startPrice, endPrice]);
   return (
-    <Stack direction={"row"} gap={2} alignItems={"center"}>
+    <Stack width={"100%"} direction={"row"} gap={2} alignItems={"center"}>
       <TextField
         type="number"
-        sx={{ bgcolor: "white", width: 100 }}
+        fullWidth
+        sx={{ bgcolor: "white", minWidth: 100 }}
         InputProps={{ inputProps: { min: 0, max: startMax() } }}
         onChange={(e) => {
           setStartPrice(+e.target.value);
@@ -50,7 +51,7 @@ const SearchProductPrice: React.FC<SearchProductPriceProps> = ({
       <TextField
         type="number"
         value={endPrice}
-        sx={{ bgcolor: "white", maxWidth: 100 }}
+        sx={{ bgcolor: "white", width: "100%", minWidth: 106 }}
         InputProps={{ inputProps: { min: startPrice } }}
         onChange={(e) => {
           setEndPrice(+e.target.value);

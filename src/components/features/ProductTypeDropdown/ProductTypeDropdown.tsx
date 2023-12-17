@@ -19,26 +19,25 @@ const ProductTypeDropdown: React.FC<ProductTypeDropdownProps> = ({
     handleValue(value);
   }, [value]);
   return (
-    <Box sx={{ minWidth: 236 }} width={"100%"}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">ประเภท</InputLabel>
-        <Select
-          sx={{ bgcolor: "white" }}
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={value}
-          label="ประเภท"
-          onChange={(e) => {
-            setValue(e.target.value);
-          }}
-        >
-          <MenuItem value={""}>ทั้งหมด</MenuItem>
-          <MenuItem value={"TREE"}>ต้นไม้</MenuItem>
-          <MenuItem value={"SOIL"}>ดิน & ปุ๋ย</MenuItem>
-          <MenuItem value={"MEDICINE"}>ยากำจัดแมลง</MenuItem>
-        </Select>
-      </FormControl>
-    </Box>
+    <FormControl sx={{ width: "100%" }}>
+      <InputLabel id="demo-simple-select-label">ประเภท</InputLabel>
+      <Select
+        fullWidth
+        sx={{ bgcolor: "white" }}
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={value}
+        label="ประเภท"
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
+      >
+        <MenuItem value={""}>ทั้งหมด</MenuItem>
+        <MenuItem value={"TREE"}>ต้นไม้</MenuItem>
+        <MenuItem value={"SOIL"}>ดิน & ปุ๋ย</MenuItem>
+        <MenuItem value={"MEDICINE"}>ยากำจัดแมลง</MenuItem>
+      </Select>
+    </FormControl>
   );
 };
 

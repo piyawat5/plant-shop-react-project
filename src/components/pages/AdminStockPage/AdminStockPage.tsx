@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   Box,
   Fab,
+  Grid,
   IconButton,
   Skeleton,
   Stack,
@@ -223,16 +224,24 @@ const AdminStockPage: React.FC<any> = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <PageName name={"คลังสินค้า"}></PageName>
-      <Stack flexWrap={"wrap"} direction={"row"} gap={2} marginBottom={4}>
-        SearchFilter
-        <SearchFilter handleValue={setSearchProductName}></SearchFilter>
-        <ProductTypeDropdown
-          handleValue={setSearchProductType}
-        ></ProductTypeDropdown>
-        <SearchProductPrice
-          handleValue={setSearchProductPrice}
-        ></SearchProductPrice>
-      </Stack>
+      <Box fontSize={20} mb={1}>
+        Filter
+      </Box>
+      <Grid container gap={3} marginBottom={4}>
+        <Grid item xs={12} sm={12} lg={12}>
+          <SearchFilter handleValue={setSearchProductName}></SearchFilter>
+        </Grid>
+        <Grid item xs={12} sm={5.5} lg={5.5}>
+          <ProductTypeDropdown
+            handleValue={setSearchProductType}
+          ></ProductTypeDropdown>
+        </Grid>
+        <Grid item xs={12} sm={3} lg={3}>
+          <SearchProductPrice
+            handleValue={setSearchProductPrice}
+          ></SearchProductPrice>
+        </Grid>
+      </Grid>
       <Box textAlign={"right"} marginBottom={4}>
         <Fab
           to="/admin-add-stock"

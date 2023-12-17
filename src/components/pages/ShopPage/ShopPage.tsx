@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Box, Stack } from "@mui/material";
+import { Box, Grid, Stack } from "@mui/material";
 import * as React from "react";
 import Pagination from "@mui/material/Pagination";
 import ProductTypeDropdown from "../../features/ProductTypeDropdown";
@@ -151,16 +151,24 @@ const ShopPage: React.FC<any> = () => {
       {/* click paging then scroll top page */}
       <div ref={ref}></div>
       <PageName name="หน้าร้าน"></PageName>
-      <Stack flexWrap={"wrap"} direction={"row"} gap={2} marginBottom={8}>
-        SearchFilter
-        <SearchFilter handleValue={setSearchProductName}></SearchFilter>
-        <ProductTypeDropdown
-          handleValue={setSearchProductType}
-        ></ProductTypeDropdown>
-        <SearchProductPrice
-          handleValue={setSearchProductPrice}
-        ></SearchProductPrice>
-      </Stack>
+      <Box fontSize={20} mb={1}>
+        Filter
+      </Box>
+      <Grid container gap={3} marginBottom={4}>
+        <Grid item xs={12} sm={12} lg={12}>
+          <SearchFilter handleValue={setSearchProductName}></SearchFilter>
+        </Grid>
+        <Grid item xs={12} sm={5.5} lg={5.5}>
+          <ProductTypeDropdown
+            handleValue={setSearchProductType}
+          ></ProductTypeDropdown>
+        </Grid>
+        <Grid item xs={12} sm={3} lg={3}>
+          <SearchProductPrice
+            handleValue={setSearchProductPrice}
+          ></SearchProductPrice>
+        </Grid>
+      </Grid>
       <Stack
         direction={"row"}
         justifyContent={"center"}

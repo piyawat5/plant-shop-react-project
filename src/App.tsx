@@ -74,13 +74,28 @@ export default function App() {
     palette: {
       primary: {
         main: "#54B435",
-        "100": "#9cff7a",
+        "100": "#E2FFD8",
+        "200": "#9CFF7A",
+        "300": "#54B435",
+        "400": "#007105",
+        "500": "#103F00",
       },
       secondary: {
         main: "#F0FF42",
+        "100": "#F9FFB2",
+        "200": "#F5FF7E",
+        "300": "#F0FF42",
+        "400": "#FFC600",
+        "500": "#FF8A00",
       },
       background: {
         default: "#EFEFEF",
+      },
+      error: {
+        main: "#DC2F02",
+      },
+      success: {
+        main: "#47FC22",
       },
       grey: {
         "100": "#F8F7F7",
@@ -94,7 +109,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: "flex", overflowX: "hidden" }}>
+      <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <Navbar
           openDrawer={() => {
@@ -110,6 +125,7 @@ export default function App() {
         <Box
           component="main"
           sx={{
+            overflowX: "hidden",
             flexGrow: 1,
             py: 3,
             paddingX: xs ? "12px" : "74px",
