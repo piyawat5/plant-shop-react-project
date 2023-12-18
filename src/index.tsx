@@ -10,6 +10,7 @@ import logger from "redux-logger";
 import reducers from "./redux/reducers";
 import { BrowserRouter } from "react-router-dom";
 import { Provider, useDispatch } from "react-redux";
+import ScrollToTop from "./components/features/ScrollToTop";
 
 export const middlewares: Middleware[] = [thunk];
 
@@ -28,6 +29,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <Provider store={store}>
+      <ScrollToTop></ScrollToTop>
       <App />
     </Provider>
   </BrowserRouter>
