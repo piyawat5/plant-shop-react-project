@@ -10,32 +10,38 @@ type OrderStatusProps = {
 
 const OrderStatus: React.FC<OrderStatusProps> = ({ name }) => {
   const theme = useTheme();
-  const [color, setColor] = useState("");
+  const [bgColor, setBgColor] = useState("");
   const [status, setStatus] = useState("");
   const [textColor, setTextColor] = useState("");
 
   useEffect(() => {
     switch (name) {
       case OrderStatusEnum.PAID:
-        setColor(theme.palette.secondary.main);
+        setBgColor("#F9FFB2");
+        setTextColor("#FF8A00");
         setStatus("ชำระเงินแล้ว");
         break;
 
       case OrderStatusEnum.NOTPAID:
-        setColor(theme.palette.error.main);
-        setTextColor("white");
+        setBgColor("white");
+        setTextColor("#DC2F02");
         setStatus("ยังไม่ได้ชำระเงิน");
         break;
       case OrderStatusEnum.COMPLETE:
-        setColor(theme.palette.success.main);
+        setBgColor("#E2FFD8");
+        setTextColor("#007105");
         setStatus("สินค้ากำลังจัดส่ง");
         break;
       case OrderStatusEnum.VERIFY:
-        setColor(theme.palette.grey[300]);
+        setBgColor(theme.palette.grey[200]);
+
+        setTextColor(theme.palette.grey[500]);
         setStatus("กำลังตรวจสอบการชำระเงิน");
         break;
       default:
-        setColor(theme.palette.error.main);
+        setBgColor(theme.palette.error.main);
+
+        setTextColor(theme.palette.error.main);
         setStatus("ยังไม่ชำระเงิน");
         break;
     }
@@ -43,10 +49,12 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ name }) => {
 
   return (
     <Box
-      color={name === OrderStatusEnum.NOTPAID ? "white" : ""}
+      color={textColor}
+      bgcolor={bgColor}
+      border={`1px solid ${textColor}`}
       borderRadius={50}
       p={"4px 8px"}
-      sx={{ backgroundColor: color }}
+      sx={{ backgroundColor: bgColor }}
     >
       {status}
     </Box>

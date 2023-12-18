@@ -2,13 +2,14 @@
 import * as React from "react";
 import ProductCard from "../../features/ProductCard";
 import Carousel from "../../features/Carousel";
-import { Box, Grid, Skeleton, Stack } from "@mui/material";
+import { Box, Grid, Skeleton, Stack, useMediaQuery } from "@mui/material";
 import CategoryCard from "../../features/CategoryCard";
 import { useNavigate } from "react-router-dom";
 import ArticleCard from "../../features/ArticleCard";
 import Modal from "../../features/Modal";
 import { ModalRoleEnum } from "../../features/Modal/Modal";
 import NumberEditor from "../../features/NumberEditor";
+import FireFly from "../../features/FireFly";
 
 // type HomePageProps = {
 //   //
@@ -38,6 +39,7 @@ type Article = {
 };
 
 const HomePage: React.FC<any> = () => {
+  const xs = useMediaQuery("(max-width: 600px)");
   const navigate = useNavigate();
   const [openModal, setOpenModal] = React.useState(false);
   const categories: Categories[] = [
@@ -179,76 +181,60 @@ const HomePage: React.FC<any> = () => {
         <Skeleton height={500}></Skeleton>
       ) : (
         <Box>
-          <Stack
-            direction={"row"}
-            justifyContent={"center"}
-            alignItems={"center"}
-            flexWrap={"wrap"}
-            marginBottom={10}
-          >
-            <Box>
-              <Box fontSize={24}>ยินดีต้อนรับ คุณ ปิยะวัตร พินทุสรศรี</Box>
-              <img
-                style={{ height: 500, width: 500 }}
-                src={`${process.env.PUBLIC_URL}/images/plant-home.png`}
-              ></img>
-            </Box>
-            <Stack direction={"column"} gap={4}>
-              <Box fontSize={20} fontWeight={500}>
-                สินค้าขายดี
+          <Grid alignItems={"center"} spacing={3} container marginBottom={5}>
+            <Grid item textAlign={"center"} xs={12} sm={12} md={12} lg={6}>
+              <Box fontSize={xs ? 20 : 24}>
+                ยินดีต้อนรับ คุณ ปิยะวัตร พินทุสรศรี
               </Box>
-              <Carousel>
-                {products.map((product, index) => (
-                  <ProductCard
-                    handleClick={() => {
-                      setOpenModal(true);
-                    }}
-                    key={index}
-                    price={product.price}
-                    productName={product.productName}
-                    stock={product.stock}
-                    image={product.image}
-                  ></ProductCard>
-                ))}
-              </Carousel>
-              <Stack
-                direction={"row"}
-                alignItems={"center"}
-                position={"relative"}
-              >
-                {bestSellerUsers.map((user, index) => (
+              <Box display={"flex"} justifyContent={"center"} width={"100%"}>
+                <Stack
+                  position={"relative"}
+                  height={xs ? 300 : 500}
+                  width={xs ? 300 : 500}
+                >
+                  <FireFly></FireFly>
                   <img
-                    key={index}
                     style={{
-                      height: 40,
-                      width: 40,
-                      position: "relative",
-                      zIndex: user.zIndex,
-                      left: user.left,
+                      height: xs ? 300 : 500,
+                      width: xs ? 300 : 500,
                     }}
-                    src={user.image}
+                    src={`${process.env.PUBLIC_URL}/images/plant-home.png`}
                   ></img>
-                ))}
-                <Box position={"relative"} left={-30}>
-                  2000 คน ซื้อสินค้าขายดี
+                </Stack>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12} sm={12} md={12} lg={6}>
+              <Stack direction={"column"} width={"100%"} spacing={5}>
+                <Box fontSize={20} fontWeight={500}>
+                  สินค้าขายดี
                 </Box>
+                <Carousel>
+                  {products.map((product, index) => (
+                    <ProductCard
+                      handleClick={() => {
+                        setOpenModal(true);
+                      }}
+                      key={index}
+                      price={product.price}
+                      productName={product.productName}
+                      stock={product.stock}
+                      image={product.image}
+                    ></ProductCard>
+                  ))}
+                </Carousel>
               </Stack>
-            </Stack>
-          </Stack>
-          <Stack
-            direction={"row"}
-            justifyContent={"center"}
-            flexWrap={"wrap"}
-            gap={8}
-            alignItems={"flex-start"}
-          >
-            <Box>
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={5}>
+            <Grid item xs={12} sm={12} md={12} lg={6}>
               <Box fontSize={20} fontWeight={500} marginBottom={5}>
                 หมวดหมู่
               </Box>
-              <Grid width={"450px"} container spacing={2}>
+              <Grid container spacing={2}>
                 {categories.map((category) => (
-                  <Grid key={category.title} item sm={6} md={3} lg={4}>
+                  <Grid key={category.title} item xs={12} sm={4} md={4} lg={4}>
                     <CategoryCard
                       title={category.title}
                       image={category.image}
@@ -259,12 +245,12 @@ const HomePage: React.FC<any> = () => {
                   </Grid>
                 ))}
               </Grid>
-            </Box>
-            <Box>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12} lg={6}>
               <Box fontSize={20} fontWeight={500} marginBottom={5}>
                 บทความ
               </Box>
-              <Stack direction={"column"} gap={3}>
+              <Stack width={"100%"} direction={"column"} gap={3}>
                 {articles.map((articles, index) => (
                   <ArticleCard
                     image={articles.image}
@@ -274,8 +260,9 @@ const HomePage: React.FC<any> = () => {
                   ></ArticleCard>
                 ))}
               </Stack>
-            </Box>
-          </Stack>
+            </Grid>
+          </Grid>
+
           <Modal
             textConfirm="เพิ่มไปยังตระกร้า"
             role={ModalRoleEnum.confirm}

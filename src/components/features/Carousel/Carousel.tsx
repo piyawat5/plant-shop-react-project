@@ -21,15 +21,14 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
   };
 
   return (
-    <Box display="flex" alignItems="center">
+    <Box width={"100%"} display="flex" alignItems="center">
       <IconButton onClick={() => handleScroll(-400)}>
         <ArrowBackIcon />
       </IconButton>
       <Box
+        width={"100%"}
         ref={scrollContainerRef}
         className="custom-scrollbar"
-        maxWidth={615}
-        width={"100%"}
         sx={{ overflowX: "scroll" }}
         padding={"14px"}
         display={"flex"}
