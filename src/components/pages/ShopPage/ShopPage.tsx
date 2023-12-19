@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Box, Grid, Stack } from "@mui/material";
+import { Box, Button, Grid, Stack } from "@mui/material";
 import * as React from "react";
 import Pagination from "@mui/material/Pagination";
 import ProductTypeDropdown from "../../features/ProductTypeDropdown";
-import SearchFilter from "../../features/SearchFilter";
+import SearchInput from "../../features/SearchInput";
 import SearchProductPrice from "../../features/SearchProductPrice";
 import PageName from "../../features/PageName";
 import usePagination from "../../features/Pagination";
@@ -12,15 +12,34 @@ import ProductCard from "../../features/ProductCard";
 import Modal from "../../features/Modal";
 import { ModalRoleEnum } from "../../features/Modal/Modal";
 import NumberEditor from "../../features/NumberEditor";
+import { useState } from "react";
+import * as productActions from "../../../redux/actions/product.action";
+import * as productIdActions from "../../../redux/actions/productId.action";
+import { useAppDispatch } from "../../..";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
+import { useLocation } from "react-router-dom";
 
 // type ShopPageProps = {
 //   //
 // };
 
 const ShopPage: React.FC<any> = () => {
-  const [searchProductName, setSearchProductName] = React.useState("");
-  const [searchProductType, setSearchProductType] = React.useState("");
-  const [searchProductPrice, setSearchProductPrice] = React.useState({});
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  const queryParam = new URLSearchParams(location.search).get("category");
+
+  const productReducer = useSelector(
+    (state: RootReducers) => state.productReducer
+  );
+  const productIdReducer = useSelector(
+    (state: RootReducers) => state.productIdReducer
+  );
+  const [searchProductName, setSearchProductName] = useState("");
+  const [searchProductType, setSearchProductType] = useState("");
+  const [searchProductPrice, setSearchProductPrice] = useState({});
+  const [clear, setClear] = useState({});
+  const isInitialRender = React.useRef(true);
   let data: Products[] = [
     {
       productName: "จุ๊กกรู้",
@@ -142,25 +161,38 @@ const ShopPage: React.FC<any> = () => {
       searchProductPrice,
       searchProductType,
     };
-    if (Object.keys(searchCombind).length > 0) {
-      console.log(searchProductName, searchProductType, searchProductPrice);
+
+    // dispatch(productActions.ProductAction() as any);
+    if (queryParam) {
+      if (isInitialRender.current) {
+        isInitialRender.current = false;
+        return;
+      }
+      console.log(1, searchProductName, searchProductType, searchProductPrice);
+    } else {
+      console.log(2, searchProductName, searchProductType, searchProductPrice);
     }
   }, [searchProductName, searchProductType, searchProductPrice]);
+
+  React.useEffect(() => {}, [clear]);
+
   return (
     <Box>
       {/* click paging then scroll top page */}
       <div ref={ref}></div>
       <PageName name="หน้าร้าน"></PageName>
+      <Button onClick={() => {}}></Button>
       <Box fontSize={20} mb={1}>
         Filter
       </Box>
       <Grid container gap={3} marginBottom={4}>
         <Grid item xs={12} sm={12} lg={12}>
-          <SearchFilter handleValue={setSearchProductName}></SearchFilter>
+          <SearchInput handleValue={setSearchProductName}></SearchInput>
         </Grid>
         <Grid item xs={12} sm={5.5} lg={5.5}>
           <ProductTypeDropdown
             handleValue={setSearchProductType}
+            searchQuery={queryParam}
           ></ProductTypeDropdown>
         </Grid>
         <Grid item xs={12} sm={3} lg={3}>
@@ -187,19 +219,6 @@ const ShopPage: React.FC<any> = () => {
         ))}
       </Stack>
 
-      {/* <Grid container justifyContent={"center"} spacing={2} marginBottom={4}>
-        {_DATA.currentData().map((product, index) => (
-          <Grid item key={index}>
-            <ProductCard
-              handleClick={() => setOpenModal(true)}
-              price={product.price}
-              productName={product.productName}
-              stock={product.stock}
-              image={product.image}
-            ></ProductCard>
-          </Grid>
-        ))}
-      </Grid> */}
       <Box sx={{ display: "flex", justifyContent: "center", marginY: 5 }}>
         <Pagination
           onClick={() => {

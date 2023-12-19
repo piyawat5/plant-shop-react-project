@@ -2,25 +2,19 @@
 import { Box, TextField } from "@mui/material";
 import * as React from "react";
 
-type SearchProductNameProps = {
+type SearchInputProps = {
   handleValue: (value: string) => void;
 };
 
-const SearchProductName: React.FC<SearchProductNameProps> = ({
-  handleValue,
-}) => {
+const SearchInput: React.FC<SearchInputProps> = ({ handleValue }) => {
   const [search, setSearch] = React.useState("");
 
   React.useEffect(() => {
-    if (search !== "") {
-      const getData = setTimeout(() => {
-        handleValue(search);
-      }, 1000);
-
-      return () => clearTimeout(getData);
-    } else {
+    const getData = setTimeout(() => {
       handleValue(search);
-    }
+    }, 1000);
+
+    return () => clearTimeout(getData);
   }, [search]);
 
   React.useEffect(() => {
@@ -39,9 +33,9 @@ const SearchProductName: React.FC<SearchProductNameProps> = ({
 
   return (
     <TextField
+      fullWidth
       sx={{ bgcolor: "white" }}
       label="ค้นหาชื่อสินค้า"
-      fullWidth
       value={search}
       variant="outlined"
       onChange={(e) => {
@@ -51,4 +45,4 @@ const SearchProductName: React.FC<SearchProductNameProps> = ({
   );
 };
 
-export default SearchProductName;
+export default SearchInput;

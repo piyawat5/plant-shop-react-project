@@ -17,7 +17,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ name }) => {
   useEffect(() => {
     switch (name) {
       case OrderStatusEnum.PAID:
-        setBgColor("#F9FFB2");
+        setBgColor("white");
         setTextColor("#FF8A00");
         setStatus("ชำระเงินแล้ว");
         break;
@@ -33,7 +33,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ name }) => {
         setStatus("สินค้ากำลังจัดส่ง");
         break;
       case OrderStatusEnum.VERIFY:
-        setBgColor(theme.palette.grey[200]);
+        setBgColor("white");
 
         setTextColor(theme.palette.grey[500]);
         setStatus("กำลังตรวจสอบการชำระเงิน");

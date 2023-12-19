@@ -18,10 +18,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { Add, Clear } from "@mui/icons-material";
-import SearchFilter from "../../features/SearchFilter";
 import ProductTypeDropdown from "../../features/ProductTypeDropdown";
 import SearchProductPrice from "../../features/SearchProductPrice";
 import PageName from "../../features/PageName";
+import SearchInput from "../../features/SearchInput";
 
 // type AdminStockPageProps = {
 //   //
@@ -39,7 +39,6 @@ const AdminStockPage: React.FC<any> = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState<ModalRoleEnum>(ModalRoleEnum.general);
   const [isOpen, setIsOpen] = useState(false);
-  const [keyword, setKeyword] = useState<string>("");
   const toggle = () => {
     setIsOpen((prev) => !prev);
   };
@@ -217,9 +216,15 @@ const AdminStockPage: React.FC<any> = () => {
     },
   ];
 
-  useEffect(() => {}, [keyword]);
+  useEffect(() => {
+    const combindFilter = {
+      searchProductName,
+      searchProductPrice,
+      searchProductType,
+    };
 
-  useEffect(() => {}, []);
+    console.log(searchProductName, searchProductPrice, searchProductType);
+  }, [searchProductName, searchProductPrice, searchProductType]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -229,7 +234,7 @@ const AdminStockPage: React.FC<any> = () => {
       </Box>
       <Grid container gap={3} marginBottom={4}>
         <Grid item xs={12} sm={12} lg={12}>
-          <SearchFilter handleValue={setSearchProductName}></SearchFilter>
+          <SearchInput handleValue={setSearchProductName}></SearchInput>
         </Grid>
         <Grid item xs={12} sm={5.5} lg={5.5}>
           <ProductTypeDropdown

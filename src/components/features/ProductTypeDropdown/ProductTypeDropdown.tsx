@@ -1,23 +1,31 @@
 /* eslint-disable jsx-a11y/alt-text */
 import * as React from "react";
-import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { OutlinedInput } from "@mui/material";
+import Select from "@mui/material/Select";
 
 type ProductTypeDropdownProps = {
   handleValue: (value: string) => void;
+  searchQuery?: string | null;
 };
 
 const ProductTypeDropdown: React.FC<ProductTypeDropdownProps> = ({
   handleValue,
+  searchQuery = "",
 }) => {
-  const [value, setValue] = React.useState("");
+  const initial = "";
+  const [value, setValue] = React.useState(initial);
+  React.useEffect(() => {
+    if (searchQuery) {
+      setValue(searchQuery);
+    }
+  }, []);
+
   React.useEffect(() => {
     handleValue(value);
   }, [value]);
+
   return (
     <FormControl sx={{ width: "100%" }}>
       <InputLabel id="demo-simple-select-label">ประเภท</InputLabel>
@@ -34,8 +42,11 @@ const ProductTypeDropdown: React.FC<ProductTypeDropdownProps> = ({
       >
         <MenuItem value={""}>ทั้งหมด</MenuItem>
         <MenuItem value={"TREE"}>ต้นไม้</MenuItem>
+        <MenuItem value={"SEED"}>เมล็ด</MenuItem>
+        <MenuItem value={"EQUIPMENT"}>อุปกรณ์</MenuItem>
+        <MenuItem value={"INSECTICIDE"}>ยากำจัดวัชพืช</MenuItem>
         <MenuItem value={"SOIL"}>ดิน & ปุ๋ย</MenuItem>
-        <MenuItem value={"MEDICINE"}>ยากำจัดแมลง</MenuItem>
+        <MenuItem value={"DECORATION"}>ของตกแต่ง</MenuItem>
       </Select>
     </FormControl>
   );

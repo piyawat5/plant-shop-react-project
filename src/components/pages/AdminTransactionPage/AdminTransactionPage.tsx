@@ -7,7 +7,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { NumericFormat } from "react-number-format";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import SearchFilter from "../../features/SearchFilter";
+import SearchInput from "../../features/SearchInput";
 import PageName from "../../features/PageName";
 import OrderStatusDropdown from "../../features/OrderStatusDropdown";
 import OrderStatus from "../../features/OrderStatus";
@@ -24,7 +24,6 @@ const AdminTransactionPage: React.FC<any> = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState<ModalRoleEnum>(ModalRoleEnum.general);
   const [isOpen, setIsOpen] = useState(false);
-  const [keyword, setKeyword] = useState<string>("");
   const toggle = () => {
     setIsOpen((prev) => !prev);
   };
@@ -162,15 +161,19 @@ const AdminTransactionPage: React.FC<any> = () => {
     },
   ];
 
-  useEffect(() => {}, [keyword]);
-
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const combinefilter = {
+      searchCustomer,
+      searchOrderType,
+    };
+    console.log(combinefilter);
+  }, [searchCustomer, searchOrderType]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <PageName name={"ธุรกรรม"}></PageName>
       <Stack flexWrap={"wrap"} direction={"row"} gap={2} marginBottom={4}>
-        <SearchFilter handleValue={setSearchCustomer}></SearchFilter>
+        <SearchInput handleValue={setSearchCustomer}></SearchInput>
         <OrderStatusDropdown
           handleValue={setSearchOrderType}
         ></OrderStatusDropdown>

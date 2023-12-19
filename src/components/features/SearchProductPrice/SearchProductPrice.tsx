@@ -1,10 +1,9 @@
-/* eslint-disable jsx-a11y/alt-text */
 import { Box, Input, Stack, TextField } from "@mui/material";
 import * as React from "react";
 
 type ParameterPrice = {
-  startPrice: number;
-  endPrice: number;
+  startPrice: number | null;
+  endPrice: number | null;
 };
 
 type SearchProductPriceProps = {
@@ -14,17 +13,23 @@ type SearchProductPriceProps = {
 const SearchProductPrice: React.FC<SearchProductPriceProps> = ({
   handleValue,
 }) => {
-  const [startPrice, setStartPrice] = React.useState<number>(0);
-  const [endPrice, setEndPrice] = React.useState<number>(100000);
-  const startMax = () => {
+  const [startPrice, setStartPrice] = React.useState<number | null>(null);
+  const [endPrice, setEndPrice] = React.useState<number | null>(null);
+  const isInitialRender = React.useRef(true);
+
+  const startMax = React.useMemo(() => {
     if (startPrice === endPrice) {
-      setEndPrice((prev) => prev + 1);
+      return endPrice === null ? null : endPrice + 1;
     }
     return endPrice;
-  };
+  }, [startPrice, endPrice]);
 
   React.useEffect(() => {
-    if (startPrice !== 0 || endPrice !== 0) {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+    if (startPrice !== null || endPrice !== null) {
       const getData = setTimeout(() => {
         handleValue({ startPrice, endPrice });
       }, 1000);
@@ -34,30 +39,37 @@ const SearchProductPrice: React.FC<SearchProductPriceProps> = ({
       handleValue({ startPrice, endPrice });
     }
   }, [startPrice, endPrice]);
+
+  const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value === "" ? null : +e.target.value;
+    setStartPrice(value);
+  };
+
+  const handleEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value === "" ? null : +e.target.value;
+    setEndPrice(value);
+  };
+
   return (
     <Stack width={"100%"} direction={"row"} gap={2} alignItems={"center"}>
       <TextField
         type="number"
         fullWidth
         sx={{ bgcolor: "white", minWidth: 100 }}
-        InputProps={{ inputProps: { min: 0, max: startMax() } }}
-        onChange={(e) => {
-          setStartPrice(+e.target.value);
-        }}
-        value={startPrice}
+        InputProps={{ inputProps: { min: 0, max: startMax } }}
+        onChange={handleStartChange}
+        value={startPrice === null ? "" : startPrice}
         label={"ราคาเริ่มต้น"}
-      ></TextField>
+      />
       <Box>-</Box>
       <TextField
         type="number"
-        value={endPrice}
+        value={endPrice === null ? "" : endPrice}
         sx={{ bgcolor: "white", width: "100%", minWidth: 106 }}
         InputProps={{ inputProps: { min: startPrice } }}
-        onChange={(e) => {
-          setEndPrice(+e.target.value);
-        }}
+        onChange={handleEndChange}
         label={"ราคาสูงสุด"}
-      ></TextField>
+      />
     </Stack>
   );
 };

@@ -10,6 +10,11 @@ import Modal from "../../features/Modal";
 import { ModalRoleEnum } from "../../features/Modal/Modal";
 import NumberEditor from "../../features/NumberEditor";
 import FireFly from "../../features/FireFly";
+import { useAppDispatch } from "../../..";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
+import * as productActions from "../../../redux/actions/product.action";
+import * as productIdActions from "../../../redux/actions/productId.action";
 
 // type HomePageProps = {
 //   //
@@ -17,6 +22,7 @@ import FireFly from "../../features/FireFly";
 type Categories = {
   title: string;
   image: string;
+  category: string;
 };
 
 export type Products = {
@@ -41,81 +47,49 @@ type Article = {
 const HomePage: React.FC<any> = () => {
   const xs = useMediaQuery("(max-width: 600px)");
   const navigate = useNavigate();
+  const [quantity, setQuantity] = React.useState(0);
+
+  //modal
   const [openModal, setOpenModal] = React.useState(false);
+
+  //state management
+  const dispatch = useAppDispatch();
+  const productReducer = useSelector(
+    (state: RootReducers) => state.productReducer
+  );
+  const productIdReducer = useSelector(
+    (state: RootReducers) => state.productIdReducer
+  );
   const categories: Categories[] = [
     {
       title: "ต้นไม้",
       image: `${process.env.PUBLIC_URL}/images/plant.png`,
+      category: "TREE",
     },
     {
       title: "ดิน & ปุ๋ย",
       image: `${process.env.PUBLIC_URL}/images/fertilizer.png`,
+      category: "SOIL",
     },
     {
       title: "อุปกรณ์",
       image: `${process.env.PUBLIC_URL}/images/watering-can.png`,
+      category: "EQUIPMENT",
     },
     {
       title: "ของตกแต่ง",
       image: `${process.env.PUBLIC_URL}/images/flamingo.png`,
+      category: "DECORATION",
     },
     {
       title: "ยา",
       image: `${process.env.PUBLIC_URL}/images/pesticide.png`,
+      category: "INSECTICIDE",
     },
     {
       title: "เมล็ด",
       image: `${process.env.PUBLIC_URL}/images/seed.png`,
-    },
-  ];
-  const products: Products[] = [
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree2.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree3.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
+      category: "SEED",
     },
   ];
   const bestSellerUsers: BestSellerUsers[] = [
@@ -167,17 +141,14 @@ const HomePage: React.FC<any> = () => {
       title: "ยากำจัดวัชพืช",
     },
   ];
-  const [fetch, setFetch] = React.useState(true);
 
   React.useEffect(() => {
-    setTimeout(() => {
-      setFetch(false);
-    }, 1000);
+    dispatch(productActions.ProductAction() as any);
   }, []);
 
   return (
     <Box>
-      {fetch ? (
+      {productReducer.isFetching ? (
         <Skeleton height={500}></Skeleton>
       ) : (
         <Box>
@@ -210,9 +181,12 @@ const HomePage: React.FC<any> = () => {
                   สินค้าขายดี
                 </Box>
                 <Carousel>
-                  {products.map((product, index) => (
+                  {productReducer.products.map((product, index) => (
                     <ProductCard
                       handleClick={() => {
+                        dispatch(
+                          productIdActions.productIdAction(product.id) as any
+                        );
                         setOpenModal(true);
                       }}
                       key={index}
@@ -223,10 +197,33 @@ const HomePage: React.FC<any> = () => {
                     ></ProductCard>
                   ))}
                 </Carousel>
+                <Stack
+                  direction={"row"}
+                  alignItems={"center"}
+                  position={"relative"}
+                >
+                  {bestSellerUsers.map((user, index) => (
+                    <img
+                      key={index}
+                      style={{
+                        height: 40,
+                        width: 40,
+                        position: "relative",
+                        zIndex: user.zIndex,
+                        left: user.left,
+                      }}
+                      src={user.image}
+                    ></img>
+                  ))}
+                  <Box position={"relative"} left={-30}>
+                    2000 คน ซื้อสินค้าขายดี
+                  </Box>
+                </Stack>
               </Stack>
             </Grid>
           </Grid>
 
+          {/* category */}
           <Grid container spacing={5}>
             <Grid item xs={12} sm={12} md={12} lg={6}>
               <Box fontSize={20} fontWeight={500} marginBottom={5}>
@@ -239,7 +236,7 @@ const HomePage: React.FC<any> = () => {
                       title={category.title}
                       image={category.image}
                       handleClick={() => {
-                        navigate("/shop");
+                        navigate(`/shop?category=${category.category}`);
                       }}
                     ></CategoryCard>
                   </Grid>
@@ -274,23 +271,22 @@ const HomePage: React.FC<any> = () => {
           >
             <Stack direction={"column"} alignItems={"center"}>
               <Box fontSize={20} fontWeight={400}>
-                ต้นหอมจริงๆ
+                {productIdReducer.product?.name}
               </Box>
-              <img
-                height={200}
-                src={`${process.env.PUBLIC_URL}/images/tree2.png`}
-              ></img>
+              <img height={200} src={productIdReducer.product?.image}></img>
               <Stack direction={"column"} spacing={2} width={300}>
                 <Box>
                   <span style={{ fontWeight: 400 }}>รายละเอียด: </span>
                   <span style={{ fontWeight: 300, color: "grey" }}>
-                    เป็นต้นที่สวยงามจุงเบย
+                    {productIdReducer.product?.description}
                   </span>
                 </Box>
                 <Box>
                   <span style={{ fontWeight: 400 }}>สต็อก: </span>
 
-                  <span style={{ fontWeight: 300, color: "grey" }}>10</span>
+                  <span style={{ fontWeight: 300, color: "grey" }}>
+                    {productIdReducer.product?.stock}
+                  </span>
                 </Box>
                 <Box
                   sx={{
@@ -303,7 +299,9 @@ const HomePage: React.FC<any> = () => {
                   <Box>
                     <span style={{ fontWeight: 400 }}> ราคา: </span>
 
-                    <span style={{ fontWeight: 300, color: "grey" }}>200</span>
+                    <span style={{ fontWeight: 300, color: "grey" }}>
+                      {productIdReducer.product?.price}
+                    </span>
                   </Box>
                   <Box
                     gap={2}
@@ -312,7 +310,11 @@ const HomePage: React.FC<any> = () => {
                     alignItems={"center"}
                   >
                     <Box>จำนวน: </Box>
-                    <NumberEditor handleValue={(value) => {}}></NumberEditor>
+                    <NumberEditor
+                      handleValue={(value) => {
+                        setQuantity(value);
+                      }}
+                    ></NumberEditor>
                   </Box>
                 </Box>
               </Stack>
