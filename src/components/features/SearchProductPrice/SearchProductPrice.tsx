@@ -1,5 +1,7 @@
 import { Box, Input, Stack, TextField } from "@mui/material";
 import * as React from "react";
+import { RootReducers } from "../../../redux/reducers";
+import { useSelector } from "react-redux";
 
 type ParameterPrice = {
   startPrice: number | null;
@@ -15,6 +17,9 @@ const SearchProductPrice: React.FC<SearchProductPriceProps> = ({
 }) => {
   const [startPrice, setStartPrice] = React.useState<number | null>(null);
   const [endPrice, setEndPrice] = React.useState<number | null>(null);
+  const clearSearchReducer = useSelector(
+    (state: RootReducers) => state.clearSearchReducer
+  );
   const isInitialRender = React.useRef(true);
 
   const startMax = React.useMemo(() => {
@@ -39,6 +44,11 @@ const SearchProductPrice: React.FC<SearchProductPriceProps> = ({
       handleValue({ startPrice, endPrice });
     }
   }, [startPrice, endPrice]);
+
+  React.useEffect(() => {
+    setStartPrice(null);
+    setEndPrice(null);
+  }, [clearSearchReducer]);
 
   const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value === "" ? null : +e.target.value;

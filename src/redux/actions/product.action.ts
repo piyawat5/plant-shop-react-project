@@ -2,6 +2,17 @@ import axios from "axios"
 import { AnyAction, Dispatch } from "redux"
 import { domain, token } from "../../utils/const"
 
+type SearchProductPrice = {
+    startPrice?: number;
+    endPrice?: number;
+}
+
+type CombindSearch = {
+    searchProductName?: string;
+    searchProductType?: string;
+    searchProductPrice?: SearchProductPrice
+}
+
 export const ProductIsFetching = () => ({
     type: 'PRODUCT_FETCHING',
 })
@@ -13,7 +24,7 @@ export const ProductIsSuccess = (payload: any) => ({
     payload
 })
 
-export const ProductAction = () => {
+export const ProductAction = (combindSearch?: CombindSearch) => {
     return async (dispatch: Dispatch<AnyAction>) => {
         try {
             //is fetching
@@ -24,8 +35,22 @@ export const ProductAction = () => {
                     Authorization: `Bearer ${token}`
                 }
             })
-            dispatch(ProductIsSuccess(res.data))
-            console.log(res.data)
+            let data = res.data
+            const searchName = combindSearch?.searchProductName;
+            const searchType = combindSearch?.searchProductType
+            const searchStartPrice = combindSearch?.searchProductPrice?.startPrice
+            const searchEndPrice = combindSearch?.searchProductPrice?.endPrice
+
+            const filterData = data.filter((item: any) => {
+                const filterProductName = item.name.toLowerCase().includes(searchName?.toLowerCase())
+
+
+
+                return filterProductName ? true : false
+            })
+
+            console.log('filterProduct!!!', filterData)
+            dispatch(ProductIsSuccess(filterData))
 
         } catch (error) {
             dispatch(ProductIsFail())

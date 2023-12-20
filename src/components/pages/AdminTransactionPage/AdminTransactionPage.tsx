@@ -1,5 +1,12 @@
 import * as React from "react";
-import { Box, IconButton, Skeleton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Modal, { ModalRoleEnum } from "../../features/Modal/Modal";
 import { useEffect, useState } from "react";
@@ -12,6 +19,8 @@ import PageName from "../../features/PageName";
 import OrderStatusDropdown from "../../features/OrderStatusDropdown";
 import OrderStatus from "../../features/OrderStatus";
 import { OrderStatusEnum } from "../../types/OrderStatus";
+import { useAppDispatch } from "../../..";
+import * as clearActions from "../../../redux/actions/clearSearch.action";
 
 const AdminTransactionPage: React.FC<any> = () => {
   const [searchCustomer, setSearchCustomer] = React.useState("");
@@ -20,7 +29,7 @@ const AdminTransactionPage: React.FC<any> = () => {
   // const stockIdReducer = useSelector(
   //   (state: RootReducers) => state.stockIdReducer
   // );
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [role, setRole] = useState<ModalRoleEnum>(ModalRoleEnum.general);
   const [isOpen, setIsOpen] = useState(false);
@@ -172,7 +181,17 @@ const AdminTransactionPage: React.FC<any> = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <PageName name={"ธุรกรรม"}></PageName>
-      <Stack flexWrap={"wrap"} direction={"row"} gap={2} marginBottom={4}>
+      <Stack direction={"row"} justifyContent={"space-between"}>
+        <Box fontSize={20} mb={1}>
+          Filter
+        </Box>
+        <Button
+          onClick={() => dispatch(clearActions.handleClearSearch() as any)}
+        >
+          CLEAR
+        </Button>
+      </Stack>
+      <Stack direction={"column"} gap={2} marginBottom={4}>
         <SearchInput handleValue={setSearchCustomer}></SearchInput>
         <OrderStatusDropdown
           handleValue={setSearchOrderType}

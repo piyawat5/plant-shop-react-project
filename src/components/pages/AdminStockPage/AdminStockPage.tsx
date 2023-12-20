@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
   Box,
+  Button,
   Fab,
   Grid,
   IconButton,
@@ -22,6 +23,8 @@ import ProductTypeDropdown from "../../features/ProductTypeDropdown";
 import SearchProductPrice from "../../features/SearchProductPrice";
 import PageName from "../../features/PageName";
 import SearchInput from "../../features/SearchInput";
+import * as clearActions from "../../../redux/actions/clearSearch.action";
+import { useAppDispatch } from "../../..";
 
 // type AdminStockPageProps = {
 //   //
@@ -35,8 +38,10 @@ const AdminStockPage: React.FC<any> = () => {
   // const stockIdReducer = useSelector(
   //   (state: RootReducers) => state.stockIdReducer
   // );
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  //modal
   const [role, setRole] = useState<ModalRoleEnum>(ModalRoleEnum.general);
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => {
@@ -229,9 +234,16 @@ const AdminStockPage: React.FC<any> = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <PageName name={"คลังสินค้า"}></PageName>
-      <Box fontSize={20} mb={1}>
-        Filter
-      </Box>
+      <Stack direction={"row"} justifyContent={"space-between"}>
+        <Box fontSize={20} mb={1}>
+          Filter
+        </Box>
+        <Button
+          onClick={() => dispatch(clearActions.handleClearSearch() as any)}
+        >
+          CLEAR
+        </Button>
+      </Stack>
       <Grid container gap={3} marginBottom={4}>
         <Grid item xs={12} sm={12} lg={12}>
           <SearchInput handleValue={setSearchProductName}></SearchInput>

@@ -13,12 +13,13 @@ import Modal from "../../features/Modal";
 import { ModalRoleEnum } from "../../features/Modal/Modal";
 import NumberEditor from "../../features/NumberEditor";
 import { useState } from "react";
-import * as productActions from "../../../redux/actions/product.action";
-import * as productIdActions from "../../../redux/actions/productId.action";
 import { useAppDispatch } from "../../..";
 import { useSelector } from "react-redux";
 import { RootReducers } from "../../../redux/reducers";
 import { useLocation } from "react-router-dom";
+import * as productActions from "../../../redux/actions/product.action";
+import * as productIdActions from "../../../redux/actions/productId.action";
+import * as clearActions from "../../../redux/actions/clearSearch.action";
 
 // type ShopPageProps = {
 //   //
@@ -35,10 +36,12 @@ const ShopPage: React.FC<any> = () => {
   const productIdReducer = useSelector(
     (state: RootReducers) => state.productIdReducer
   );
+  const clearSearchReducer = useSelector(
+    (state: RootReducers) => state.clearSearchReducer
+  );
   const [searchProductName, setSearchProductName] = useState("");
   const [searchProductType, setSearchProductType] = useState("");
   const [searchProductPrice, setSearchProductPrice] = useState({});
-  const [clear, setClear] = useState({});
   const isInitialRender = React.useRef(true);
   let data: Products[] = [
     {
@@ -156,7 +159,7 @@ const ShopPage: React.FC<any> = () => {
   const [openModal, setOpenModal] = React.useState(false);
 
   React.useEffect(() => {
-    const searchCombind = {
+    const combineSearch = {
       searchProductName,
       searchProductPrice,
       searchProductType,
@@ -168,23 +171,30 @@ const ShopPage: React.FC<any> = () => {
         isInitialRender.current = false;
         return;
       }
-      console.log(1, searchProductName, searchProductType, searchProductPrice);
+      dispatch(productActions.ProductAction(combineSearch) as any);
+      // console.log(1, searchProductName, searchProductType, searchProductPrice);
     } else {
-      console.log(2, searchProductName, searchProductType, searchProductPrice);
+      dispatch(productActions.ProductAction(combineSearch) as any);
+      // console.log(2, searchProductName, searchProductType, searchProductPrice);
     }
   }, [searchProductName, searchProductType, searchProductPrice]);
-
-  React.useEffect(() => {}, [clear]);
 
   return (
     <Box>
       {/* click paging then scroll top page */}
       <div ref={ref}></div>
       <PageName name="หน้าร้าน"></PageName>
-      <Button onClick={() => {}}></Button>
-      <Box fontSize={20} mb={1}>
-        Filter
-      </Box>
+      <Stack direction={"row"} justifyContent={"space-between"}>
+        <Box fontSize={20} mb={1}>
+          Filter
+        </Box>
+        <Button
+          onClick={() => dispatch(clearActions.handleClearSearch() as any)}
+        >
+          CLEAR
+        </Button>
+      </Stack>
+
       <Grid container gap={3} marginBottom={4}>
         <Grid item xs={12} sm={12} lg={12}>
           <SearchInput handleValue={setSearchProductName}></SearchInput>

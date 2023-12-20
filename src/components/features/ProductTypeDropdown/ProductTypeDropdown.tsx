@@ -4,6 +4,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { RootReducers } from "../../../redux/reducers";
+import { useSelector } from "react-redux";
 
 type ProductTypeDropdownProps = {
   handleValue: (value: string) => void;
@@ -16,6 +18,10 @@ const ProductTypeDropdown: React.FC<ProductTypeDropdownProps> = ({
 }) => {
   const initial = "";
   const [value, setValue] = React.useState(initial);
+  const clearSearchReducer = useSelector(
+    (state: RootReducers) => state.clearSearchReducer
+  );
+  const firstRender = React.useRef(true);
   React.useEffect(() => {
     if (searchQuery) {
       setValue(searchQuery);
@@ -25,6 +31,14 @@ const ProductTypeDropdown: React.FC<ProductTypeDropdownProps> = ({
   React.useEffect(() => {
     handleValue(value);
   }, [value]);
+
+  React.useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    setValue("");
+  }, [clearSearchReducer]);
 
   return (
     <FormControl sx={{ width: "100%" }}>

@@ -7,7 +7,28 @@ type FireFlyProps = {};
 
 const FireFly: React.FC<FireFlyProps> = () => {
   return (
-    <Box position={"absolute"} zIndex={10} className="FireFly-animation1"></Box>
+    <Box width={"100%"}>
+      <Box
+        position={"absolute"}
+        zIndex={10}
+        className="FireFly FireFly-animation1"
+      ></Box>
+      <Box
+        position={"absolute"}
+        zIndex={10}
+        className="FireFly FireFly-animation2"
+      ></Box>
+      <Box
+        position={"absolute"}
+        zIndex={10}
+        className="FireFly FireFly-animation3"
+      ></Box>
+      <Box
+        position={"absolute"}
+        zIndex={10}
+        className="FireFly FireFly-animation4"
+      ></Box>
+    </Box>
   );
 };
 
