@@ -16,7 +16,7 @@ const AdminAddStockPage: React.FC<any> = () => {
         </Box>
       </Stack>
 
-      <StockForm></StockForm>
+      <StockForm action="ADD"></StockForm>
     </Box>
   );
 };

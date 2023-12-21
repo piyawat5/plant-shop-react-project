@@ -10,11 +10,13 @@ import { useSelector } from "react-redux";
 type ProductTypeDropdownProps = {
   handleValue: (value: string) => void;
   searchQuery?: string | null;
+  required?: boolean;
 };
 
 const ProductTypeDropdown: React.FC<ProductTypeDropdownProps> = ({
   handleValue,
   searchQuery = "",
+  required = false,
 }) => {
   const initial = "";
   const [value, setValue] = React.useState(initial);
@@ -26,7 +28,7 @@ const ProductTypeDropdown: React.FC<ProductTypeDropdownProps> = ({
     if (searchQuery) {
       setValue(searchQuery);
     }
-  }, []);
+  }, [searchQuery]);
 
   React.useEffect(() => {
     handleValue(value);
@@ -50,17 +52,18 @@ const ProductTypeDropdown: React.FC<ProductTypeDropdownProps> = ({
         id="demo-simple-select"
         value={value}
         label="ประเภท"
+        required={required}
         onChange={(e) => {
           setValue(e.target.value);
         }}
       >
         <MenuItem value={""}>ทั้งหมด</MenuItem>
-        <MenuItem value={"TREE"}>ต้นไม้</MenuItem>
-        <MenuItem value={"SEED"}>เมล็ด</MenuItem>
-        <MenuItem value={"EQUIPMENT"}>อุปกรณ์</MenuItem>
-        <MenuItem value={"INSECTICIDE"}>ยากำจัดวัชพืช</MenuItem>
-        <MenuItem value={"SOIL"}>ดิน & ปุ๋ย</MenuItem>
-        <MenuItem value={"DECORATION"}>ของตกแต่ง</MenuItem>
+        <MenuItem value={"Tree"}>ต้นไม้</MenuItem>
+        <MenuItem value={"Seed"}>เมล็ด</MenuItem>
+        <MenuItem value={"Equipment"}>อุปกรณ์</MenuItem>
+        <MenuItem value={"Insecticide"}>ยากำจัดวัชพืช</MenuItem>
+        <MenuItem value={"Soil"}>ดิน & ปุ๋ย</MenuItem>
+        <MenuItem value={"Decoration"}>ของตกแต่ง</MenuItem>
       </Select>
     </FormControl>
   );

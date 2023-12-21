@@ -36,117 +36,16 @@ const ShopPage: React.FC<any> = () => {
   const productIdReducer = useSelector(
     (state: RootReducers) => state.productIdReducer
   );
-  const clearSearchReducer = useSelector(
-    (state: RootReducers) => state.clearSearchReducer
-  );
   const [searchProductName, setSearchProductName] = useState("");
   const [searchProductType, setSearchProductType] = useState("");
   const [searchProductPrice, setSearchProductPrice] = useState({});
   const isInitialRender = React.useRef(true);
-  let data: Products[] = [
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree2.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree3.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree2.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree3.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-  ];
 
   //Pagination
   let [page, setPage] = React.useState(1);
   const PER_PAGE = 10;
-  const count = Math.ceil(data.length / PER_PAGE);
-  const _DATA = usePagination(data, PER_PAGE);
+  const count = Math.ceil(productReducer.products.length / PER_PAGE);
+  const _DATA = usePagination(productReducer.products, PER_PAGE);
   const handleChange = (e: any, p: any) => {
     setPage(p);
     _DATA.jump(p);
@@ -165,17 +64,14 @@ const ShopPage: React.FC<any> = () => {
       searchProductType,
     };
 
-    // dispatch(productActions.ProductAction() as any);
     if (queryParam) {
       if (isInitialRender.current) {
         isInitialRender.current = false;
         return;
       }
       dispatch(productActions.ProductAction(combineSearch) as any);
-      // console.log(1, searchProductName, searchProductType, searchProductPrice);
     } else {
       dispatch(productActions.ProductAction(combineSearch) as any);
-      // console.log(2, searchProductName, searchProductType, searchProductPrice);
     }
   }, [searchProductName, searchProductType, searchProductPrice]);
 
@@ -219,12 +115,15 @@ const ShopPage: React.FC<any> = () => {
       >
         {_DATA.currentData().map((product, index) => (
           <ProductCard
-            key={index}
-            handleClick={() => setOpenModal(true)}
+            key={product.id}
+            handleClick={() => {
+              dispatch(productIdActions.productIdAction(product.id) as any);
+              setOpenModal(true);
+            }}
             price={product.price}
-            productName={product.productName}
+            productName={product.name}
             stock={product.stock}
-            image={product.image}
+            image={product?.image}
           ></ProductCard>
         ))}
       </Stack>
@@ -252,23 +151,22 @@ const ShopPage: React.FC<any> = () => {
       >
         <Stack direction={"column"} alignItems={"center"}>
           <Box fontSize={20} fontWeight={400}>
-            ต้นหอมจริงๆ
+            {productIdReducer.product?.name}
           </Box>
-          <img
-            height={200}
-            src={`${process.env.PUBLIC_URL}/images/tree2.png`}
-          ></img>
+          <img height={200} src={productIdReducer.product?.image}></img>
           <Stack direction={"column"} spacing={2} width={300}>
             <Box>
               <span style={{ fontWeight: 400 }}>รายละเอียด: </span>
               <span style={{ fontWeight: 300, color: "grey" }}>
-                เป็นต้นที่สวยงามจุงเบย
+                {productIdReducer.product?.description}
               </span>
             </Box>
             <Box>
               <span style={{ fontWeight: 400 }}>สต็อก: </span>
 
-              <span style={{ fontWeight: 300, color: "grey" }}>10</span>
+              <span style={{ fontWeight: 300, color: "grey" }}>
+                {productIdReducer.product?.stock}
+              </span>
             </Box>
             <Box
               sx={{
@@ -281,7 +179,9 @@ const ShopPage: React.FC<any> = () => {
               <Box>
                 <span style={{ fontWeight: 400 }}> ราคา: </span>
 
-                <span style={{ fontWeight: 300, color: "grey" }}>200</span>
+                <span style={{ fontWeight: 300, color: "grey" }}>
+                  {productIdReducer.product?.price}
+                </span>
               </Box>
               <Box
                 gap={2}

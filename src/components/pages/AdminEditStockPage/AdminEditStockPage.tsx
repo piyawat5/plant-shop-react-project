@@ -1,19 +1,25 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import * as React from "react";
 import PageName from "../../features/PageName";
 import StockForm from "../../features/StockForm";
+import { useMatch } from "react-router-dom";
+import * as productIdAction from "../../../redux/actions/productId.action";
+import { useAppDispatch } from "../../..";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
 
 // type AdminEditStockPageProps = {
 //   //
 // };
 
 const AdminEditStockPage: React.FC<any> = () => {
-  const initial = {
-    productName: "จุ๊กกรู้",
-    price: 1500,
-    quantity: 300,
-    image: "image/image/image",
-  };
+  const match = useMatch("/admin-edit-stock/:id");
+  const dispatch = useAppDispatch();
+
+  React.useEffect(() => {
+    match?.params.id &&
+      dispatch(productIdAction.productIdAction(+match?.params.id) as any);
+  }, []);
   return (
     <Box>
       <Stack alignItems={"center"}>
@@ -21,8 +27,7 @@ const AdminEditStockPage: React.FC<any> = () => {
           <PageName name="แก้ไขสินค้า"></PageName>
         </Box>
       </Stack>
-
-      <StockForm product={initial}></StockForm>
+      <StockForm action="EDIT"></StockForm>
     </Box>
   );
 };

@@ -4,9 +4,11 @@ import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { OutlinedInput } from "@mui/material";
+import Select from "@mui/material/Select";
 import { OrderStatusEnum } from "../../types/OrderStatus";
+import * as clearActions from "../../../redux/actions/clearSearch.action";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
 
 type OrderStatusDropdownProps = {
   handleValue: (value: string) => void;
@@ -16,9 +18,19 @@ const OrderStatusDropdown: React.FC<OrderStatusDropdownProps> = ({
   handleValue,
 }) => {
   const [value, setValue] = React.useState("");
+
+  const clearReducer = useSelector(
+    (state: RootReducers) => state.clearSearchReducer
+  );
+
   React.useEffect(() => {
     handleValue(value);
   }, [value]);
+
+  React.useEffect(() => {
+    setValue("");
+  }, [clearReducer]);
+
   return (
     <Box sx={{ minWidth: 236 }} width={"100%"}>
       <FormControl fullWidth>

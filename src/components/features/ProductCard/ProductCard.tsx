@@ -1,4 +1,4 @@
-import { Box, Stack, useTheme } from "@mui/material";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import * as React from "react";
 
 type ProductCardProps = {
@@ -25,7 +25,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
       onClick={handleClick}
       sx={{
         bgcolor: "white",
-        // width: "186px",
+        width: "100%",
+        maxWidth: "186px",
         height: "260px",
         boxShadow: 2,
         padding: "14px",
@@ -42,8 +43,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
           direction={"row"}
           justifyContent={"space-between"}
         >
-          <Box>{productName}</Box>
-          <Box>{price} บาท</Box>
+          <Typography noWrap>{productName}</Typography>
+          <Box minWidth={67}>{price} บาท</Box>
         </Stack>
       </Stack>
     </Box>

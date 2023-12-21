@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Box } from "@mui/material";
+import { domain, token } from "./const";
 type Props = {
   handleUrl: (url: string) => void;
 };
@@ -24,15 +25,23 @@ function UploadImage({ handleUrl }: Props) {
   const uploadImage = async (event: any) => {
     const file = event.target.files[0];
     const base64 = await convertBase64(file);
-    // axios
-    //   .post("https://tame-red-dhole-slip.cyclic.app/products/uploadImage", {
-    //     image: base64,
-    //   })
-    //   .then((res) => {
-    //     handleUrl(res.data);
-    //     alert("image uploaded success");
-    //   })
-    //   .catch(console.log);
+    axios
+      .post(
+        `${domain}/uploadImage`,
+        {
+          image: base64,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        handleUrl(res.data);
+        alert("image uploaded success");
+      })
+      .catch(console.log);
     handleUrl("testtest");
   };
 

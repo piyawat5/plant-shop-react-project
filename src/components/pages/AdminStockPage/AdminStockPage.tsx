@@ -7,7 +7,6 @@ import {
   IconButton,
   Skeleton,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
@@ -23,8 +22,12 @@ import ProductTypeDropdown from "../../features/ProductTypeDropdown";
 import SearchProductPrice from "../../features/SearchProductPrice";
 import PageName from "../../features/PageName";
 import SearchInput from "../../features/SearchInput";
-import * as clearActions from "../../../redux/actions/clearSearch.action";
 import { useAppDispatch } from "../../..";
+import * as clearActions from "../../../redux/actions/clearSearch.action";
+import * as productActions from "../../../redux/actions/product.action";
+import * as productIdActions from "../../../redux/actions/productId.action";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
 
 // type AdminStockPageProps = {
 //   //
@@ -34,10 +37,12 @@ const AdminStockPage: React.FC<any> = () => {
   const [searchProductName, setSearchProductName] = React.useState("");
   const [searchProductType, setSearchProductType] = React.useState("");
   const [searchProductPrice, setSearchProductPrice] = React.useState({});
-  // const stockReducer = useSelector((state: RootReducers) => state.stockReducer);
-  // const stockIdReducer = useSelector(
-  //   (state: RootReducers) => state.stockIdReducer
-  // );
+  const productsReducer = useSelector(
+    (state: RootReducers) => state.productReducer
+  );
+  const productIdReducer = useSelector(
+    (state: RootReducers) => state.productIdReducer
+  );
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -47,73 +52,6 @@ const AdminStockPage: React.FC<any> = () => {
   const toggle = () => {
     setIsOpen((prev) => !prev);
   };
-
-  const products = [
-    {
-      id: 1,
-      category: "Tree",
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree2.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      id: 2,
-      category: "Tree",
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      id: 3,
-      category: "Tree",
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree3.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      id: 4,
-      category: "Tree",
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      id: 5,
-      category: "Tree",
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      id: 6,
-      category: "Tree",
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      id: 7,
-      category: "Tree",
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      id: 8,
-      category: "Tree",
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-  ];
 
   const columns: GridColDef[] = [
     {
@@ -141,7 +79,7 @@ const AdminStockPage: React.FC<any> = () => {
       },
     },
     {
-      field: "productName",
+      field: "name",
       headerName: "ชื่อ",
       width: 150,
     },
@@ -149,6 +87,9 @@ const AdminStockPage: React.FC<any> = () => {
       field: "category",
       headerName: "ประเภท",
       width: 150,
+      valueGetter(params) {
+        return params.row.category.name;
+      },
     },
     {
       field: "price",
@@ -192,7 +133,7 @@ const AdminStockPage: React.FC<any> = () => {
           <IconButton
             onClick={() => {
               setRole(ModalRoleEnum.general);
-              // dispatch(stockIdActions.getById(row.id));
+              dispatch(productIdActions.productIdAction(row.id) as any);
               toggle();
             }}
           >
@@ -208,7 +149,7 @@ const AdminStockPage: React.FC<any> = () => {
           <IconButton
             onClick={() => {
               setRole(ModalRoleEnum.confirmDelete);
-              // dispatch(stockIdActions.getById(row.id));
+              dispatch(productIdActions.productIdAction(row.id) as any);
               toggle();
             }}
           >
@@ -228,7 +169,7 @@ const AdminStockPage: React.FC<any> = () => {
       searchProductType,
     };
 
-    console.log(searchProductName, searchProductPrice, searchProductType);
+    dispatch(productActions.ProductAction(combindFilter) as any);
   }, [searchProductName, searchProductPrice, searchProductType]);
 
   return (
@@ -273,8 +214,8 @@ const AdminStockPage: React.FC<any> = () => {
       <Box sx={{ height: "60vh", width: "100%" }}>
         <DataGrid
           sx={{ bgcolor: "white" }}
-          // loading={stockReducer.isFetching}
-          rows={products}
+          loading={productsReducer.isFetching}
+          rows={productsReducer.products}
           columns={columns}
           getRowHeight={() => 80}
           initialState={{
@@ -296,48 +237,72 @@ const AdminStockPage: React.FC<any> = () => {
           onClose={() => {
             toggle();
           }}
-          onSubmit={() => {}}
         >
-          <Stack direction={"column"} alignItems={"center"}>
-            <Box fontSize={20} fontWeight={400}>
-              ต้นหอมจริงๆ
-            </Box>
-            <img
-              alt="tree"
-              height={200}
-              src={`${process.env.PUBLIC_URL}/images/tree2.png`}
-            ></img>
-            <Stack direction={"column"} spacing={2} width={300}>
-              <Box>
-                <span style={{ fontWeight: 400 }}>รายละเอียด: </span>
-                <span style={{ fontWeight: 300, color: "grey" }}>
-                  เป็นต้นที่สวยงามจุงเบย
-                </span>
+          {productIdReducer.isFetching ? (
+            <>
+              <Skeleton animation="wave"></Skeleton>
+              <Skeleton animation="wave"></Skeleton>
+              <Skeleton animation="wave"></Skeleton>
+              <Skeleton animation="wave"></Skeleton>
+              <Skeleton animation="wave"></Skeleton>
+              <Skeleton animation="wave"></Skeleton>
+              <Skeleton animation="wave"></Skeleton>
+              <Skeleton animation="wave"></Skeleton>
+              <Box sx={{ my: 2 }}></Box>
+            </>
+          ) : (
+            <Stack direction={"column"} alignItems={"center"}>
+              <Box fontSize={20} fontWeight={400}>
+                {productIdReducer.product?.name}
               </Box>
-              <Box>
-                <span style={{ fontWeight: 400 }}>สต็อก: </span>
+              <img
+                alt="tree"
+                height={200}
+                src={productIdReducer.product?.image}
+              ></img>
+              <Stack direction={"column"} spacing={2} width={300}>
+                <Box>
+                  <span style={{ fontWeight: 400 }}>รายละเอียด: </span>
+                  <span style={{ fontWeight: 300, color: "grey" }}>
+                    {productIdReducer.product?.description}
+                  </span>
+                </Box>
+                <Box>
+                  <span style={{ fontWeight: 400 }}>สต็อก: </span>
 
-                <span style={{ fontWeight: 300, color: "grey" }}>10</span>
-              </Box>
-              <Box>
-                <span style={{ fontWeight: 400 }}> ราคา: </span>
+                  <span style={{ fontWeight: 300, color: "grey" }}>
+                    {productIdReducer.product?.stock}
+                  </span>
+                </Box>
+                <Box>
+                  <span style={{ fontWeight: 400 }}> ราคา: </span>
 
-                <span style={{ fontWeight: 300, color: "grey" }}>200</span>
-              </Box>
+                  <span style={{ fontWeight: 300, color: "grey" }}>
+                    {productIdReducer.product?.price}
+                  </span>
+                </Box>
+              </Stack>
             </Stack>
-          </Stack>
+          )}
         </Modal>
       ) : (
         <Modal
           isOpen={isOpen}
           role={ModalRoleEnum.confirmDelete}
-          onSubmit={() => {
-            // dispatch(stockActions.deleteStock(stockIdReducer.res?.id));
+          onSubmit={async () => {
+            await dispatch(
+              productActions.ProductDelete(productIdReducer.product?.id) as any
+            );
+            dispatch(productActions.ProductAction() as any);
           }}
           onClose={toggle}
         >
-          {false ? (
+          {productIdReducer.isFetching ? (
             <>
+              <Skeleton animation="wave"></Skeleton>
+              <Skeleton animation="wave"></Skeleton>
+              <Skeleton animation="wave"></Skeleton>
+              <Skeleton animation="wave"></Skeleton>
               <Skeleton animation="wave"></Skeleton>
               <Skeleton animation="wave"></Skeleton>
               <Box sx={{ my: 2 }}></Box>
@@ -348,9 +313,9 @@ const AdminStockPage: React.FC<any> = () => {
               <img
                 alt="tree"
                 height={200}
-                src={`${process.env.PUBLIC_URL}/images/tree2.png`}
+                src={productIdReducer.product.image}
               ></img>
-              <Box>Do you want to delete 1?</Box>
+              <Box>Do you want to delete {productIdReducer.product?.name}?</Box>
             </Box>
           )}
         </Modal>

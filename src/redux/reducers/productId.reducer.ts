@@ -15,11 +15,11 @@ const initialState: ProductIdState = {
 export default (state = initialState, { type, payload }: any): ProductIdState => {
     switch (type) {
         case 'PRODUCT_ID_FETCHING':
-            return { isFetching: true, isFalse: false, product: null }
+            return { ...state, isFetching: true, isFalse: false, product: null }
         case 'PRODUCT_ID_FAIL':
-            return { isFetching: false, isFalse: true, product: null }
+            return { ...state, isFetching: false, isFalse: true, product: null }
         case 'PRODUCT_ID_SUCCESS':
-            return { isFetching: false, isFalse: false, product: payload }
+            return { ...state, isFetching: false, isFalse: false, product: payload }
 
         default:
             return state

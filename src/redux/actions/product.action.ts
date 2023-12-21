@@ -1,6 +1,7 @@
 import axios from "axios"
 import { AnyAction, Dispatch } from "redux"
 import { domain, token } from "../../utils/const"
+import { productIdIsSuccess } from "./productId.action";
 
 type SearchProductPrice = {
     startPrice?: number;
@@ -43,14 +44,44 @@ export const ProductAction = (combindSearch?: CombindSearch) => {
 
             const filterData = data.filter((item: any) => {
                 const filterProductName = item.name.toLowerCase().includes(searchName?.toLowerCase())
+                return filterProductName ? true : false;
+            }).filter((item: any) => {
+                if (searchType) {
+                    const filterProductType = item.category.name.toLowerCase() === searchType?.toLowerCase()
+                    if (filterProductType) {
+                        return true
+                    } else {
+                        return false
+                    }
+                } else {
+                    return true
+                }
+            }).filter((item: any) => {
+                if (searchStartPrice) {
+                    const filterProductStartPrice = item.price >= searchStartPrice
+                    if (filterProductStartPrice) {
+                        return true
+                    } else {
+                        return false
+                    }
+                } else {
+                    return true
+                }
+            }).filter((item: any) => {
+                if (searchEndPrice) {
+                    const filterProductEndPrice = item.price <= searchEndPrice
+                    if (filterProductEndPrice) {
+                        return true
+                    } else {
+                        return false
+                    }
+                } else {
+                    return true
+                }
 
-
-
-                return filterProductName ? true : false
             })
 
-            console.log('filterProduct!!!', filterData)
-            dispatch(ProductIsSuccess(filterData))
+            dispatch(ProductIsSuccess(combindSearch ? filterData : data))
 
         } catch (error) {
             dispatch(ProductIsFail())
@@ -58,22 +89,66 @@ export const ProductAction = (combindSearch?: CombindSearch) => {
     }
 }
 
-// export const ProductPostAction = () => {
-//     return async (dispatch: Dispatch<AnyAction>) => {
-//         try {
-//             //is fetching
-//             dispatch(ProductIsFetching())
+export const ProductPost = (body: any, navigate: (path: string) => void) => {
+    return async (dispatch: Dispatch<AnyAction>) => {
+        try {
+            //is fetching
+            dispatch(ProductIsFetching())
 
-//              await axios.post(`${domain}/product`, {
-//                 headers: {
-//                     Authorization: `Bearer ${token}`
-//                 }
-//             })
-//             dispatch(ProductIsSuccess(res.data))
-//             console.log(res.data)
+            const res = await axios.post(`${domain}/product/create`, body, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
 
-//         } catch (error) {
-//             dispatch(ProductIsFail())
-//         }
-//     }
-// }
+            })
+            dispatch(ProductIsSuccess([]))
+            res.data && navigate('/admin-stock')
+
+
+        } catch (error) {
+            dispatch(ProductIsFail())
+        }
+    }
+}
+
+
+export const ProductEdit = (body: any, navigate: (path: string) => void) => {
+    return async (dispatch: Dispatch<AnyAction>) => {
+        try {
+            //is fetching
+            dispatch(ProductIsFetching())
+            console.log('woooooooooo', body)
+            const res = await axios.put(`${domain}/product/edit`, body, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+
+            })
+
+            dispatch(productIdIsSuccess([]))
+            res.data && navigate('/admin-stock')
+
+        } catch (error) {
+            dispatch(ProductIsFail())
+        }
+    }
+}
+
+export const ProductDelete = (id: number) => {
+    return async (dispatch: Dispatch<AnyAction>) => {
+        try {
+            //is fetching
+            dispatch(ProductIsFetching())
+
+            await axios.delete(`${domain}/product/delete/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            dispatch(ProductIsSuccess([]))
+
+        } catch (error) {
+            dispatch(ProductIsFail())
+        }
+    }
+}

@@ -64,32 +64,32 @@ const HomePage: React.FC<any> = () => {
     {
       title: "ต้นไม้",
       image: `${process.env.PUBLIC_URL}/images/plant.png`,
-      category: "TREE",
+      category: "Tree",
     },
     {
       title: "ดิน & ปุ๋ย",
       image: `${process.env.PUBLIC_URL}/images/fertilizer.png`,
-      category: "SOIL",
+      category: "Soil",
     },
     {
       title: "อุปกรณ์",
       image: `${process.env.PUBLIC_URL}/images/watering-can.png`,
-      category: "EQUIPMENT",
+      category: "Equipment",
     },
     {
       title: "ของตกแต่ง",
       image: `${process.env.PUBLIC_URL}/images/flamingo.png`,
-      category: "DECORATION",
+      category: "Decoration",
     },
     {
       title: "ยา",
       image: `${process.env.PUBLIC_URL}/images/pesticide.png`,
-      category: "INSECTICIDE",
+      category: "Insecticide",
     },
     {
       title: "เมล็ด",
       image: `${process.env.PUBLIC_URL}/images/seed.png`,
-      category: "SEED",
+      category: "Seed",
     },
   ];
   const bestSellerUsers: BestSellerUsers[] = [
@@ -189,9 +189,9 @@ const HomePage: React.FC<any> = () => {
                         );
                         setOpenModal(true);
                       }}
-                      key={index}
+                      key={product.id}
                       price={product.price}
-                      productName={product.productName}
+                      productName={product.name}
                       stock={product.stock}
                       image={product.image}
                     ></ProductCard>
