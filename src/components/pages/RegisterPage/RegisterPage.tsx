@@ -3,8 +3,11 @@ import PageName from "../../features/PageName";
 import { Box, Button, Stack, TextField } from "@mui/material";
 import { Formik, FormikProps } from "formik";
 import { useNavigate } from "react-router-dom";
-// import { useAppDispatch } from "../../..";
+import { useAppDispatch } from "../../..";
 import MyDatepicker from "../../features/MyDatepicker";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
+import * as registerActions from "../../../redux/actions/register.action";
 
 // type RegisterPageProps = {
 //   //
@@ -13,10 +16,10 @@ import MyDatepicker from "../../features/MyDatepicker";
 const RegisterPage: React.FC<any> = () => {
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const navigate = useNavigate();
-  // const stockReducers = useSelector(
-  //   (state: RootReducers) => state.stockReducer
-  // );
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
+  const registerReducer = useSelector(
+    (state: RootReducers) => state.registerReducer
+  );
 
   const Form = ({
     handleSubmit,
@@ -53,6 +56,7 @@ const RegisterPage: React.FC<any> = () => {
               id="lname"
               label="นามสกุล"
               variant="outlined"
+              disabled={registerReducer.isFetching}
               fullWidth
               required
             ></TextField>
@@ -60,6 +64,7 @@ const RegisterPage: React.FC<any> = () => {
           <TextField
             onChange={handleChange}
             value={values.email}
+            disabled={registerReducer.isFetching}
             id="email"
             label="Email"
             variant="outlined"
@@ -69,6 +74,7 @@ const RegisterPage: React.FC<any> = () => {
           <TextField
             onChange={handleChange}
             value={values.password}
+            disabled={registerReducer.isFetching}
             id="password"
             label="รหัสผ่าน"
             variant="outlined"
@@ -80,6 +86,7 @@ const RegisterPage: React.FC<any> = () => {
               setConfirmPassword(e.target.value);
             }}
             value={confirmPassword}
+            disabled={registerReducer.isFetching}
             id="confirmPassword"
             label="ยืนยันรหัสผ่าน"
             variant="outlined"
@@ -95,7 +102,7 @@ const RegisterPage: React.FC<any> = () => {
             <Button
               onClick={() => navigate("/login")}
               variant="outlined"
-              // disabled={registerReducer.isFetching}
+              disabled={registerReducer.isFetching}
               color="primary"
               type="button"
               fullWidth
@@ -107,7 +114,7 @@ const RegisterPage: React.FC<any> = () => {
                 color: "#fff",
               }}
               variant="contained"
-              // disabled={registerReducer.isFetching}
+              disabled={registerReducer.isFetching}
               color="primary"
               type="submit"
               fullWidth
@@ -126,6 +133,11 @@ const RegisterPage: React.FC<any> = () => {
     email: "",
     password: "",
   };
+
+  const formatDate = (date: Date) => {
+    return date.toISOString().split("T")[0];
+  };
+
   return (
     <Box>
       <Box display={"flex"} alignItems={"center"} flexDirection={"column"}>
@@ -134,8 +146,15 @@ const RegisterPage: React.FC<any> = () => {
           <Formik
             initialValues={initial}
             onSubmit={async (value, { setSubmitting }) => {
-              console.log(value);
-              setSubmitting(false);
+              const body = {
+                ...value,
+                dateOfBirth: formatDate(value?.dateOfBirth),
+              };
+              dispatch(
+                registerActions.registerAction(body, (path) =>
+                  navigate(path)
+                ) as any
+              );
             }}
           >
             {(props) => Form(props)}

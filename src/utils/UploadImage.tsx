@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Box } from "@mui/material";
-import { domain, token } from "./const";
+import { domain } from "./const";
 type Props = {
   handleUrl: (url: string) => void;
 };
@@ -25,6 +25,7 @@ function UploadImage({ handleUrl }: Props) {
   const uploadImage = async (event: any) => {
     const file = event.target.files[0];
     const base64 = await convertBase64(file);
+    const token = localStorage.getItem("TOKEN");
     axios
       .post(
         `${domain}/uploadImage`,

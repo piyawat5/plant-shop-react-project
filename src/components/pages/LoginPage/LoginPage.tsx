@@ -1,9 +1,12 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-// import { useAppDispatch } from "../../..";
 import { Formik, FormikProps } from "formik";
 import { Box, Button, Stack, TextField } from "@mui/material";
 import PageName from "../../features/PageName";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
+import { useAppDispatch } from "../../..";
+import * as loginActions from "../../../redux/actions/login.action";
 
 // type LoginPageProps = {
 //   //
@@ -11,10 +14,8 @@ import PageName from "../../features/PageName";
 
 const LoginPage: React.FC<any> = () => {
   const navigate = useNavigate();
-  // const stockReducers = useSelector(
-  //   (state: RootReducers) => state.stockReducer
-  // );
-  // const dispatch = useAppDispatch();
+  const loginReducer = useSelector((state: RootReducers) => state.loginReducer);
+  const dispatch = useAppDispatch();
 
   const Form = ({ handleSubmit, handleChange, values }: FormikProps<any>) => {
     return (
@@ -31,6 +32,7 @@ const LoginPage: React.FC<any> = () => {
           <TextField
             onChange={handleChange}
             value={values.email}
+            disabled={loginReducer.isFetching}
             type="email"
             id="email"
             label="Email"
@@ -42,6 +44,7 @@ const LoginPage: React.FC<any> = () => {
           <TextField
             onChange={handleChange}
             value={values.password}
+            disabled={loginReducer.isFetching}
             id="password"
             label="รหัสผ่าน"
             variant="outlined"
@@ -52,7 +55,7 @@ const LoginPage: React.FC<any> = () => {
             <Button
               onClick={() => navigate("/register")}
               variant="outlined"
-              // disabled={registerReducer.isFetching}
+              disabled={loginReducer.isFetching}
               color="primary"
               type="button"
               fullWidth
@@ -64,7 +67,7 @@ const LoginPage: React.FC<any> = () => {
                 color: "#fff",
               }}
               variant="contained"
-              // disabled={registerReducer.isFetching}
+              disabled={loginReducer.isFetching}
               color="primary"
               type="submit"
               fullWidth
@@ -93,8 +96,9 @@ const LoginPage: React.FC<any> = () => {
           <Formik
             initialValues={initial}
             onSubmit={async (value, { setSubmitting }) => {
-              console.log(value);
-              setSubmitting(false);
+              dispatch(
+                loginActions.loginAction(value, (path) => navigate(path)) as any
+              );
             }}
           >
             {(props) => Form(props)}

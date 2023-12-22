@@ -9,6 +9,8 @@ import { Badge, Menu, MenuItem } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
+import * as logoutActions from "../../redux/actions/login.action";
+import { useAppDispatch } from "../..";
 
 const drawerWidth = 240;
 
@@ -18,6 +20,11 @@ interface Props {
 
 export default function Navbar({ openDrawer }: Props) {
   const navigate = useNavigate();
+
+  //Redux
+  const dispatch = useAppDispatch();
+
+  //Menu list
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const menuId = "Account-menu";
   const isMenuOpen = Boolean(anchorEl);
@@ -56,7 +63,7 @@ export default function Navbar({ openDrawer }: Props) {
       <MenuItem
         onClick={() => {
           handleMenuClose();
-          navigate("/login");
+          dispatch(logoutActions.logoutAction((path) => navigate(path)) as any);
         }}
       >
         Log out

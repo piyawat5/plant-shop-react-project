@@ -1,6 +1,6 @@
 import axios from "axios"
 import { AnyAction, Dispatch } from "redux"
-import { domain, token } from "../../utils/const"
+import { domain } from "../../utils/const"
 import { productIdIsSuccess } from "./productId.action";
 
 type SearchProductPrice = {
@@ -30,8 +30,9 @@ export const ProductAction = (combindSearch?: CombindSearch) => {
         try {
             //is fetching
             dispatch(ProductIsFetching())
-
+            const token = localStorage.getItem('TOKEN')
             const res = await axios.get(`${domain}/product`, {
+
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -94,7 +95,7 @@ export const ProductPost = (body: any, navigate: (path: string) => void) => {
         try {
             //is fetching
             dispatch(ProductIsFetching())
-
+            const token = localStorage.getItem('TOKEN')
             const res = await axios.post(`${domain}/product/create`, body, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -117,7 +118,7 @@ export const ProductEdit = (body: any, navigate: (path: string) => void) => {
         try {
             //is fetching
             dispatch(ProductIsFetching())
-            console.log('woooooooooo', body)
+            const token = localStorage.getItem('TOKEN')
             const res = await axios.put(`${domain}/product/edit`, body, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -139,7 +140,7 @@ export const ProductDelete = (id: number) => {
         try {
             //is fetching
             dispatch(ProductIsFetching())
-
+            const token = localStorage.getItem('TOKEN')
             await axios.delete(`${domain}/product/delete/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`

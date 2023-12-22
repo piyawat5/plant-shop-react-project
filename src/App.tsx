@@ -20,12 +20,23 @@ import Navbar from "./components/layouts/Navbar";
 import Menu from "./components/layouts/Menu";
 import { ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
 import EditProfilePage from "./components/pages/EditProfilePage";
+import { useSelector } from "react-redux";
+import { RootReducers } from "./redux/reducers";
+import PrivateRoutes from "./utils/PrivateRoutes";
+import { useEffect } from "react";
+import * as loginActions from "./redux/actions/login.action";
+import { useAppDispatch } from ".";
+import PublicRoutes from "./utils/PublicRoutes";
 
 const drawerWidth = 240;
 
 export default function App() {
   const [open, setOpen] = React.useState(false);
   const xs = useMediaQuery("(max-width:600px)");
+
+  //redux
+  const dispatch = useAppDispatch();
+  const loginReducer = useSelector((state: RootReducers) => state.loginReducer);
 
   const theme = createTheme({
     components: {
@@ -107,21 +118,33 @@ export default function App() {
     },
   });
 
+  useEffect(() => {
+    const getData = async () => {
+      await dispatch(loginActions.authen() as any);
+    };
+    getData();
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <Navbar
-          openDrawer={() => {
-            setOpen(!open);
-          }}
-        ></Navbar>
-        <Menu
-          open={open}
-          closeDrawer={() => {
-            setOpen(!open);
-          }}
-        ></Menu>
+        {loginReducer.authorization && (
+          <>
+            <Navbar
+              openDrawer={() => {
+                setOpen(!open);
+              }}
+            ></Navbar>
+            <Menu
+              open={open}
+              closeDrawer={() => {
+                setOpen(!open);
+              }}
+            ></Menu>
+          </>
+        )}
+
         <Box
           component="main"
           sx={{
@@ -134,52 +157,63 @@ export default function App() {
         >
           <Toolbar />
           <Routes>
-            <Route
-              path="/register"
-              element={<RegisterPage></RegisterPage>}
-            ></Route>
-            <Route path="/login" element={<LoginPage></LoginPage>}></Route>
-            <Route path="/" element={<Navigate to="/login"></Navigate>}></Route>
-            <Route path="*" element={<Navigate to="/login"></Navigate>}></Route>
-            <Route path="/home" element={<HomePage></HomePage>}></Route>
-            <Route path="/shop" element={<ShopPage></ShopPage>}></Route>
-            <Route
-              path="/profile"
-              element={<ProfilePage></ProfilePage>}
-            ></Route>
-            <Route
-              path="/edit-profile"
-              element={<EditProfilePage></EditProfilePage>}
-            ></Route>
-            <Route
-              path="/payment"
-              element={<PaymentPage></PaymentPage>}
-            ></Route>
-            <Route
-              path="/order-detail"
-              element={<OrderDetailPage></OrderDetailPage>}
-            ></Route>
-            <Route
-              path="/my-order"
-              element={<MyOrderPage></MyOrderPage>}
-            ></Route>
-            <Route path="/cart" element={<CartPage></CartPage>}></Route>
-            <Route
-              path="/admin-add-stock"
-              element={<AdminAddStockPage></AdminAddStockPage>}
-            ></Route>
-            <Route
-              path="/admin-edit-stock/:id"
-              element={<AdminEditStockPage></AdminEditStockPage>}
-            ></Route>
-            <Route
-              path="/admin-stock"
-              element={<AdminStockPage></AdminStockPage>}
-            ></Route>
-            <Route
-              path="/admin-transaction"
-              element={<AdminTransactionPage></AdminTransactionPage>}
-            ></Route>
+            <Route element={<PublicRoutes></PublicRoutes>}>
+              <Route
+                path="/register"
+                element={<RegisterPage></RegisterPage>}
+              ></Route>
+              <Route path="/login" element={<LoginPage></LoginPage>}></Route>
+            </Route>
+
+            <Route element={<PrivateRoutes></PrivateRoutes>}>
+              <Route
+                path="/"
+                element={<Navigate to="/home"></Navigate>}
+              ></Route>
+              <Route
+                path="*"
+                element={<Navigate to="/home"></Navigate>}
+              ></Route>
+              <Route path="/home" element={<HomePage></HomePage>}></Route>
+              <Route path="/shop" element={<ShopPage></ShopPage>}></Route>
+              <Route
+                path="/profile"
+                element={<ProfilePage></ProfilePage>}
+              ></Route>
+              <Route
+                path="/edit-profile"
+                element={<EditProfilePage></EditProfilePage>}
+              ></Route>
+              <Route
+                path="/payment"
+                element={<PaymentPage></PaymentPage>}
+              ></Route>
+              <Route
+                path="/order-detail"
+                element={<OrderDetailPage></OrderDetailPage>}
+              ></Route>
+              <Route
+                path="/my-order"
+                element={<MyOrderPage></MyOrderPage>}
+              ></Route>
+              <Route path="/cart" element={<CartPage></CartPage>}></Route>
+              <Route
+                path="/admin-add-stock"
+                element={<AdminAddStockPage></AdminAddStockPage>}
+              ></Route>
+              <Route
+                path="/admin-edit-stock/:id"
+                element={<AdminEditStockPage></AdminEditStockPage>}
+              ></Route>
+              <Route
+                path="/admin-stock"
+                element={<AdminStockPage></AdminStockPage>}
+              ></Route>
+              <Route
+                path="/admin-transaction"
+                element={<AdminTransactionPage></AdminTransactionPage>}
+              ></Route>
+            </Route>
           </Routes>
         </Box>
       </Box>

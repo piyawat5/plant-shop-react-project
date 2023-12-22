@@ -1,6 +1,6 @@
 import axios from "axios"
 import { AnyAction, Dispatch } from "redux"
-import { domain, token } from "../../utils/const"
+import { domain } from "../../utils/const"
 
 export const productIdIsFetching = () => ({
     type: 'PRODUCT_ID_FETCHING',
@@ -18,7 +18,7 @@ export const productIdAction = (productId: number) => {
         try {
             //is fetching
             dispatch(productIdIsFetching())
-
+            const token = localStorage.getItem("TOKEN");
             const res = await axios.get(`${domain}/product/${productId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`

@@ -3,7 +3,7 @@
 export type RegisterState = {
     isFetching: boolean,
     isFalse: boolean,
-    msg: string
+    msg: string | null;
 }
 
 const initialState: RegisterState = {
@@ -14,11 +14,11 @@ const initialState: RegisterState = {
 
 export default (state = initialState, { type, payload }: any): RegisterState => {
     switch (type) {
-        case 'test':
-            return { isFetching: true, isFalse: false, msg: payload }
-        case 'test2':
-            return { isFetching: false, isFalse: true, msg: payload }
-        case 'test3':
+        case 'REGISTER_FETCHING':
+            return { isFetching: true, isFalse: false, msg: null }
+        case 'REGISTER_FAIL':
+            return { isFetching: false, isFalse: true, msg: null }
+        case 'REGISTER_SUCCESS':
             return { isFetching: false, isFalse: false, msg: payload }
 
         default:

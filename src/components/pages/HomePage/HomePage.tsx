@@ -60,6 +60,7 @@ const HomePage: React.FC<any> = () => {
   const productIdReducer = useSelector(
     (state: RootReducers) => state.productIdReducer
   );
+  const loginReducer = useSelector((state: RootReducers) => state.loginReducer);
   const categories: Categories[] = [
     {
       title: "ต้นไม้",
@@ -155,7 +156,8 @@ const HomePage: React.FC<any> = () => {
           <Grid alignItems={"center"} spacing={3} container marginBottom={5}>
             <Grid item textAlign={"center"} xs={12} sm={12} md={12} lg={6}>
               <Box fontSize={xs ? 20 : 24}>
-                ยินดีต้อนรับ คุณ ปิยะวัตร พินทุสรศรี
+                ยินดีต้อนรับ คุณ {loginReducer.authorization.fname}{" "}
+                {loginReducer.authorization.lname}
               </Box>
               <Box display={"flex"} justifyContent={"center"} width={"100%"}>
                 <Stack
