@@ -2,14 +2,31 @@
 import React, { useEffect, useState } from "react";
 import "./NumberEditor.css";
 import { Box, Stack, useTheme } from "@mui/material";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
 
 type NumberEditorProps = {
   handleValue: (value: number) => void;
 };
 
 const NumberEditor: React.FC<NumberEditorProps> = ({ handleValue }) => {
-  const [value, setValue] = useState(0);
+  const cartReducer = useSelector((state: RootReducers) => state.cartReducer);
+  const productIdReducer = useSelector(
+    (state: RootReducers) => state.productIdReducer
+  );
+  let init = 1;
+  const [value, setValue] = useState(init);
   const theme = useTheme();
+
+  useEffect(() => {
+    let test = cartReducer.order?.orderDetail.findIndex(
+      (item: any) => item.product_id === productIdReducer.product.id
+    );
+
+    init = test > -1 ? cartReducer.order?.orderDetail[test]?.quantity : 1;
+    console.log(test);
+  }, [productIdReducer, cartReducer]);
+
   useEffect(() => {
     handleValue(value);
   }, [value]);

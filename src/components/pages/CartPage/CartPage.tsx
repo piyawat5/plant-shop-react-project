@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Products } from "../HomePage/HomePage";
 import { Box, Button, Skeleton, Stack } from "@mui/material";
 import PageName from "../../features/PageName";
 import Modal from "../../features/Modal";
@@ -7,7 +6,11 @@ import { ModalRoleEnum } from "../../features/Modal/Modal";
 import NumberEditor from "../../features/NumberEditor";
 import { useNavigate } from "react-router-dom";
 import ProductOrderCard from "../../features/ProductOrderCard";
-import { RollerShades } from "@mui/icons-material";
+import * as orderActions from "../../../redux/actions/order.action";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
+import { useEffect } from "react";
+import { useAppDispatch } from "../../..";
 
 // type CartPageProps = {
 //   //
@@ -15,58 +18,16 @@ import { RollerShades } from "@mui/icons-material";
 
 const CartPage: React.FC<any> = () => {
   const navigate = useNavigate();
+
+  //redux
+  const dispatch = useAppDispatch();
+  const cartReducer = useSelector((state: RootReducers) => state.cartReducer);
+  const loginReducer = useSelector((state: RootReducers) => state.loginReducer);
+
+  //modal
   const [openModal, setOpenModal] = React.useState(false);
   const [role, setRole] = React.useState(ModalRoleEnum.general);
-  const products: Products[] = [
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree2.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree3.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-  ];
+
   return (
     <Box>
       <PageName name="ตระกร้าสินค้า"></PageName>
@@ -78,23 +39,24 @@ const CartPage: React.FC<any> = () => {
         direction={"column"}
         alignItems={"center"}
       >
-        {products.map((product, index) => (
-          <ProductOrderCard
-            handleClickProduct={() => {
-              setRole(ModalRoleEnum.general);
-              setOpenModal(true);
-            }}
-            handleClickDelete={() => {
-              setRole(ModalRoleEnum.confirmDelete);
-              setOpenModal(true);
-            }}
-            key={index}
-            productName={product.productName}
-            price={product.price}
-            quantity={10}
-            image={product.image}
-          ></ProductOrderCard>
-        ))}
+        {cartReducer.order.orderDetail &&
+          cartReducer.order.orderDetail?.map((product: any, index: number) => (
+            <ProductOrderCard
+              handleClickProduct={() => {
+                setRole(ModalRoleEnum.general);
+                setOpenModal(true);
+              }}
+              handleClickDelete={() => {
+                setRole(ModalRoleEnum.confirmDelete);
+                setOpenModal(true);
+              }}
+              key={index}
+              productName={product.productName}
+              price={product.price}
+              quantity={10}
+              image={product.image}
+            ></ProductOrderCard>
+          ))}
       </Stack>
       <Box display={"flex"} justifyContent={"center"}>
         <Stack
@@ -125,7 +87,11 @@ const CartPage: React.FC<any> = () => {
         <Modal
           onClose={() => setOpenModal(false)}
           isOpen={openModal}
-          onSubmit={() => {}}
+          onSubmit={() => {
+            //todo check res = oldNumber - newnumber
+            // check if(res > 0){do something}
+            // post purchase api
+          }}
           role={ModalRoleEnum.confirm}
           textConfirm="ยืนยัน"
         >

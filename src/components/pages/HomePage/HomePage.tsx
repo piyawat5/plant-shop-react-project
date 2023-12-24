@@ -15,6 +15,8 @@ import { useSelector } from "react-redux";
 import { RootReducers } from "../../../redux/reducers";
 import * as productActions from "../../../redux/actions/product.action";
 import * as productIdActions from "../../../redux/actions/productId.action";
+import * as orderActions from "../../../redux/actions/order.action";
+import * as cartActions from "../../../redux/actions/cart.action";
 
 // type HomePageProps = {
 //   //
@@ -61,6 +63,7 @@ const HomePage: React.FC<any> = () => {
     (state: RootReducers) => state.productIdReducer
   );
   const loginReducer = useSelector((state: RootReducers) => state.loginReducer);
+  const cartReducer = useSelector((state: RootReducers) => state.cartReducer);
   const categories: Categories[] = [
     {
       title: "ต้นไม้",
@@ -269,7 +272,21 @@ const HomePage: React.FC<any> = () => {
             onClose={() => {
               setOpenModal(false);
             }}
-            onSubmit={() => {}}
+            onSubmit={async () => {
+              let body = {
+                customer_id: loginReducer.authorization.customer.id,
+                product_id: productIdReducer.product.id,
+                quantity: quantity,
+                price: productIdReducer.product.price,
+              };
+              await dispatch(orderActions.postOrders(body) as any);
+
+              dispatch(
+                cartActions.getCart(
+                  loginReducer.authorization.customer.id
+                ) as any
+              );
+            }}
           >
             <Stack direction={"column"} alignItems={"center"}>
               <Box fontSize={20} fontWeight={400}>

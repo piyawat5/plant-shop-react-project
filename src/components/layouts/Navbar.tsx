@@ -63,6 +63,15 @@ export default function Navbar({ openDrawer }: Props) {
       <MenuItem
         onClick={() => {
           handleMenuClose();
+          // dispatch(logoutActions.logoutAction((path) => navigate(path)) as any);
+          navigate("/my-order");
+        }}
+      >
+        My orders
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose();
           dispatch(logoutActions.logoutAction((path) => navigate(path)) as any);
         }}
       >
