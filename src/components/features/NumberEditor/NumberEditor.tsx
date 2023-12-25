@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./NumberEditor.css";
 import { Box, Stack, useTheme } from "@mui/material";
 import { useSelector } from "react-redux";
@@ -14,17 +14,23 @@ const NumberEditor: React.FC<NumberEditorProps> = ({ handleValue }) => {
   const productIdReducer = useSelector(
     (state: RootReducers) => state.productIdReducer
   );
+
   let init = 1;
   const [value, setValue] = useState(init);
   const theme = useTheme();
 
   useEffect(() => {
-    let test = cartReducer.order?.orderDetail.findIndex(
-      (item: any) => item.product_id === productIdReducer.product.id
+    let checkExistingOrder = cartReducer.order?.orderDetail.findIndex(
+      (item: any) => item.product?.id === productIdReducer.product?.id
     );
 
-    init = test > -1 ? cartReducer.order?.orderDetail[test]?.quantity : 1;
-    console.log(test);
+    init =
+      checkExistingOrder > -1
+        ? cartReducer.order?.orderDetail[checkExistingOrder]?.quantity
+        : 1;
+    if (init > 1) {
+      setValue(init);
+    }
   }, [productIdReducer, cartReducer]);
 
   useEffect(() => {

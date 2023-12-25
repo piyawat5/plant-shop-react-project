@@ -2,6 +2,7 @@
 import React from "react";
 import "./ProductOrderCard.css";
 import { Box, Stack } from "@mui/material";
+import { NumericFormat } from "react-number-format";
 
 type ProductOrderCardProps = {
   productName: string;
@@ -33,6 +34,7 @@ const ProductOrderCard: React.FC<ProductOrderCardProps> = ({
     >
       <Stack
         onClick={handleClickProduct}
+        gap={1}
         width={"100%"}
         boxShadow={2}
         bgcolor={"white"}
@@ -46,12 +48,27 @@ const ProductOrderCard: React.FC<ProductOrderCardProps> = ({
         </Box>
         <Stack width={"100%"} spacing={1} direction={"column"}>
           <Box fontSize={20}>{productName}</Box>
-          <Stack direction={"row"} justifyContent={"space-between"}>
+          <Stack
+            direction={"row"}
+            gap={1}
+            justifyContent={"space-between"}
+            flexWrap={"wrap"}
+          >
             <Box>
               <span>จำนวน: </span>
               {quantity}
             </Box>
-            <Box>{price}</Box>
+            <Box>
+              ราคารวมของสินค้าชิ้นนี้{" "}
+              <NumericFormat
+                value={price}
+                displayType={"text"}
+                thousandSeparator
+                fixedDecimalScale
+                suffix=" บาท"
+                decimalScale={0}
+              ></NumericFormat>
+            </Box>
           </Stack>
         </Stack>
       </Stack>

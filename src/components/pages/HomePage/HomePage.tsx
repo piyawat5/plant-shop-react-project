@@ -190,7 +190,7 @@ const HomePage: React.FC<any> = () => {
                     <ProductCard
                       handleClick={() => {
                         dispatch(
-                          productIdActions.productIdAction(product.id) as any
+                          productIdActions.productIdAction(product?.id) as any
                         );
                         setOpenModal(true);
                       }}
@@ -273,6 +273,7 @@ const HomePage: React.FC<any> = () => {
               setOpenModal(false);
             }}
             onSubmit={async () => {
+              const scrollPosition = window.scrollY;
               let body = {
                 customer_id: loginReducer.authorization.customer.id,
                 product_id: productIdReducer.product.id,
@@ -280,6 +281,8 @@ const HomePage: React.FC<any> = () => {
                 price: productIdReducer.product.price,
               };
               await dispatch(orderActions.postOrders(body) as any);
+              await dispatch(productActions.ProductAction() as any);
+              window.scrollTo(0, scrollPosition);
 
               dispatch(
                 cartActions.getCart(

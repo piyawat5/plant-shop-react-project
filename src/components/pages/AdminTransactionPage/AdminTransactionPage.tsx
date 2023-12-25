@@ -191,7 +191,7 @@ const AdminTransactionPage: React.FC<any> = () => {
           CLEAR
         </Button>
       </Stack>
-      <Stack direction={"column"} gap={2} marginBottom={4}>
+      <Stack direction={"column"} gap={3} marginBottom={4}>
         <SearchInput handleValue={setSearchCustomer}></SearchInput>
         <OrderStatusDropdown
           handleValue={setSearchOrderType}

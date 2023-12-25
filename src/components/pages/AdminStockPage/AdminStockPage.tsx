@@ -88,6 +88,7 @@ const AdminStockPage: React.FC<any> = () => {
       headerName: "ประเภท",
       width: 150,
       valueGetter(params) {
+        //use for object field
         return params.row.category.name;
       },
     },

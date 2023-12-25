@@ -11,6 +11,10 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
 import * as logoutActions from "../../redux/actions/login.action";
 import { useAppDispatch } from "../..";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../redux/reducers";
+import { useEffect, useState } from "react";
+import * as cartActions from "../../redux/actions/cart.action";
 
 const drawerWidth = 240;
 
@@ -19,10 +23,13 @@ interface Props {
 }
 
 export default function Navbar({ openDrawer }: Props) {
+  const [badge, setBadge] = useState(0);
   const navigate = useNavigate();
 
   //Redux
   const dispatch = useAppDispatch();
+  const cartReducer = useSelector((state: RootReducers) => state.cartReducer);
+  const loginReducer = useSelector((state: RootReducers) => state.loginReducer);
 
   //Menu list
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -36,6 +43,7 @@ export default function Navbar({ openDrawer }: Props) {
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -80,6 +88,12 @@ export default function Navbar({ openDrawer }: Props) {
     </Menu>
   );
 
+  useEffect(() => {
+    dispatch(
+      cartActions.getCart(loginReducer.authorization.customer?.id) as any
+    );
+  }, []);
+
   return (
     <AppBar
       position="fixed"
@@ -109,7 +123,10 @@ export default function Navbar({ openDrawer }: Props) {
           size="large"
           color="inherit"
         >
-          <Badge badgeContent={10} color="error">
+          <Badge
+            badgeContent={cartReducer.order?.orderDetail.length}
+            color="error"
+          >
             <AddShoppingCartIcon></AddShoppingCartIcon>
           </Badge>
         </IconButton>

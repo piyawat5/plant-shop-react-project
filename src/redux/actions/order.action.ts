@@ -98,13 +98,14 @@ export const deleteOrderId = (orderId: number, productId: number, quantity: numb
             //is fetching
             dispatch(orderIsFetching())
             const token = localStorage.getItem('TOKEN')
-            const res = await axios.delete(`${domain}/order/delete/${orderId}?product_id=${productId}&quantity=${quantity}`, {
+            await axios.delete(`${domain}/order/delete/${orderId}?product_id=${productId}&quantity=${quantity}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             })
 
             dispatch(orderIsSuccess({ orders: null, msg: 'remove product from cart successfully' }))
+
 
         } catch (error) {
             dispatch(orderIsFail())

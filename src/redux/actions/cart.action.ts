@@ -19,7 +19,11 @@ export const getCart = (customerId: number) => {
             //is fetching
             dispatch(cartIsFetching())
             const token = localStorage.getItem('TOKEN')
-            const myOrders = await axios.get(`${domain}/order/myOrder/${customerId}`)
+            const myOrders = await axios.get(`${domain}/order/myOrder/${customerId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
             const order = myOrders.data.find((order: any) => order.order_status === 'CURRENT')
 
             const res = await axios.get(`${domain}/order/${order.id}`, {
@@ -27,8 +31,13 @@ export const getCart = (customerId: number) => {
                     Authorization: `Bearer ${token}`
                 }
             })
+            let products = res.data?.orderDetail.map((item: any) => {
+                let calPrice = item.product.price * item.quantity
+                return { ...item, price: calPrice }
+            })
+            const newData = { ...res.data, orderDetail: [...products] }
 
-            dispatch(cartIsSuccess(res.data))
+            dispatch(cartIsSuccess(newData))
 
         } catch (error) {
             dispatch(cartIsFail())

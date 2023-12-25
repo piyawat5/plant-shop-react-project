@@ -6,27 +6,39 @@ import { ModalRoleEnum } from "../../features/Modal/Modal";
 import NumberEditor from "../../features/NumberEditor";
 import { useNavigate } from "react-router-dom";
 import ProductOrderCard from "../../features/ProductOrderCard";
-import * as orderActions from "../../../redux/actions/order.action";
 import { useSelector } from "react-redux";
 import { RootReducers } from "../../../redux/reducers";
 import { useEffect } from "react";
 import { useAppDispatch } from "../../..";
+import * as cartActions from "../../../redux/actions/cart.action";
+import * as orderActions from "../../../redux/actions/order.action";
+import * as productIdActions from "../../../redux/actions/productId.action";
 
 // type CartPageProps = {
 //   //
 // };
 
 const CartPage: React.FC<any> = () => {
+  const [quantity, setQuantity] = React.useState(1);
   const navigate = useNavigate();
 
   //redux
   const dispatch = useAppDispatch();
   const cartReducer = useSelector((state: RootReducers) => state.cartReducer);
   const loginReducer = useSelector((state: RootReducers) => state.loginReducer);
+  const productIdReducer = useSelector(
+    (state: RootReducers) => state.productIdReducer
+  );
 
   //modal
   const [openModal, setOpenModal] = React.useState(false);
   const [role, setRole] = React.useState(ModalRoleEnum.general);
+
+  useEffect(() => {
+    dispatch(
+      cartActions.getCart(loginReducer.authorization.customer.id) as any
+    );
+  }, []);
 
   return (
     <Box>
@@ -39,24 +51,33 @@ const CartPage: React.FC<any> = () => {
         direction={"column"}
         alignItems={"center"}
       >
-        {cartReducer.order.orderDetail &&
-          cartReducer.order.orderDetail?.map((product: any, index: number) => (
+        {!cartReducer.order?.orderDetail ? (
+          <></>
+        ) : (
+          cartReducer?.order?.orderDetail?.map((item: any) => (
             <ProductOrderCard
-              handleClickProduct={() => {
+              handleClickProduct={async () => {
+                await dispatch(
+                  productIdActions.productIdAction(item.product?.id) as any
+                );
                 setRole(ModalRoleEnum.general);
                 setOpenModal(true);
               }}
-              handleClickDelete={() => {
+              handleClickDelete={async () => {
                 setRole(ModalRoleEnum.confirmDelete);
+                await dispatch(
+                  productIdActions.productIdAction(item.product?.id) as any
+                );
                 setOpenModal(true);
               }}
-              key={index}
-              productName={product.productName}
-              price={product.price}
-              quantity={10}
-              image={product.image}
+              key={item.product.id}
+              productName={item.product.name}
+              price={item.price}
+              quantity={item.quantity}
+              image={item.product.image}
             ></ProductOrderCard>
-          ))}
+          ))
+        )}
       </Stack>
       <Box display={"flex"} justifyContent={"center"}>
         <Stack
@@ -78,6 +99,7 @@ const CartPage: React.FC<any> = () => {
             }}
             sx={{ color: "white" }}
             variant="contained"
+            disabled={cartReducer.order?.orderDetail?.length < 1}
           >
             สั่งซื้อสินค้า
           </Button>
@@ -87,34 +109,46 @@ const CartPage: React.FC<any> = () => {
         <Modal
           onClose={() => setOpenModal(false)}
           isOpen={openModal}
-          onSubmit={() => {
-            //todo check res = oldNumber - newnumber
-            // check if(res > 0){do something}
-            // post purchase api
+          onSubmit={async () => {
+            const scrollPosition = window.scrollY;
+            let body = {
+              customer_id: loginReducer.authorization.customer.id,
+              product_id: productIdReducer.product.id,
+              quantity: quantity,
+              price: productIdReducer.product.price,
+            };
+            await dispatch(orderActions.postOrders(body) as any);
+            window.scrollTo(0, scrollPosition);
+
+            dispatch(
+              cartActions.getCart(loginReducer.authorization.customer.id) as any
+            );
           }}
           role={ModalRoleEnum.confirm}
           textConfirm="ยืนยัน"
         >
           <Stack direction={"column"} alignItems={"center"}>
             <Box fontSize={20} fontWeight={400}>
-              ต้นหอมจริงๆ
+              {productIdReducer.product?.name}
             </Box>
             <img
               alt="Tree"
               height={200}
-              src={`${process.env.PUBLIC_URL}/images/tree2.png`}
+              src={productIdReducer.product?.image}
             ></img>
             <Stack direction={"column"} spacing={2} width={300}>
               <Box>
                 <span style={{ fontWeight: 400 }}>รายละเอียด: </span>
                 <span style={{ fontWeight: 300, color: "grey" }}>
-                  เป็นต้นที่สวยงามจุงเบย
+                  {productIdReducer.product?.description}
                 </span>
               </Box>
               <Box>
                 <span style={{ fontWeight: 400 }}>สต็อก: </span>
 
-                <span style={{ fontWeight: 300, color: "grey" }}>10</span>
+                <span style={{ fontWeight: 300, color: "grey" }}>
+                  {productIdReducer.product?.stock}
+                </span>
               </Box>
               <Box
                 sx={{
@@ -127,7 +161,9 @@ const CartPage: React.FC<any> = () => {
                 <Box>
                   <span style={{ fontWeight: 400 }}> ราคา: </span>
 
-                  <span style={{ fontWeight: 300, color: "grey" }}>200</span>
+                  <span style={{ fontWeight: 300, color: "grey" }}>
+                    {productIdReducer.product?.price}
+                  </span>
                 </Box>
                 <Box
                   gap={2}
@@ -136,7 +172,11 @@ const CartPage: React.FC<any> = () => {
                   alignItems={"center"}
                 >
                   <Box>จำนวน: </Box>
-                  <NumberEditor handleValue={(value) => {}}></NumberEditor>
+                  <NumberEditor
+                    handleValue={(value) => {
+                      setQuantity(value);
+                    }}
+                  ></NumberEditor>
                 </Box>
               </Box>
             </Stack>
@@ -146,8 +186,23 @@ const CartPage: React.FC<any> = () => {
         <Modal
           isOpen={openModal}
           role={ModalRoleEnum.confirmDelete}
-          onSubmit={() => {
-            // dispatch(stockActions.deleteStock(stockIdReducer.res?.id));
+          onSubmit={async () => {
+            const findOrderDetailByProductId =
+              cartReducer.order?.orderDetail?.find(
+                (item: any) => item.product?.id === productIdReducer.product?.id
+              );
+            await dispatch(
+              orderActions.deleteOrderId(
+                cartReducer.order.id,
+                productIdReducer.product.id,
+                findOrderDetailByProductId.quantity
+              ) as any
+            );
+            dispatch(
+              cartActions.getCart(
+                loginReducer.authorization?.customer?.id
+              ) as any
+            );
           }}
           onClose={() => setOpenModal(false)}
         >
@@ -163,9 +218,12 @@ const CartPage: React.FC<any> = () => {
               <img
                 alt="tree"
                 height={200}
-                src={`${process.env.PUBLIC_URL}/images/tree2.png`}
+                src={productIdReducer.product?.image}
               ></img>
-              <Box>Do you want to remove 1 from cart ?</Box>
+              <Box>
+                Do you want to remove {productIdReducer.product?.name} from cart
+                ?
+              </Box>
             </Box>
           )}
         </Modal>
