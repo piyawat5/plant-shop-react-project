@@ -17,6 +17,7 @@ import * as productActions from "../../../redux/actions/product.action";
 import * as productIdActions from "../../../redux/actions/productId.action";
 import * as orderActions from "../../../redux/actions/order.action";
 import * as cartActions from "../../../redux/actions/cart.action";
+import { useState } from "react";
 
 // type HomePageProps = {
 //   //
@@ -49,10 +50,11 @@ type Article = {
 const HomePage: React.FC<any> = () => {
   const xs = useMediaQuery("(max-width: 600px)");
   const navigate = useNavigate();
-  const [quantity, setQuantity] = React.useState(0);
+  const [quantity, setQuantity] = useState(0);
 
   //modal
-  const [openModal, setOpenModal] = React.useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [savePositionCaurosel, setSavePositionCaurosel] = useState(false);
 
   //state management
   const dispatch = useAppDispatch();
@@ -185,7 +187,7 @@ const HomePage: React.FC<any> = () => {
                 <Box fontSize={20} fontWeight={500}>
                   สินค้าขายดี
                 </Box>
-                <Carousel>
+                <Carousel position={savePositionCaurosel}>
                   {productReducer.products.map((product, index) => (
                     <ProductCard
                       handleClick={() => {
@@ -193,6 +195,7 @@ const HomePage: React.FC<any> = () => {
                           productIdActions.productIdAction(product?.id) as any
                         );
                         setOpenModal(true);
+                        setSavePositionCaurosel(true);
                       }}
                       key={product.id}
                       price={product.price}
@@ -271,9 +274,11 @@ const HomePage: React.FC<any> = () => {
             isOpen={openModal}
             onClose={() => {
               setOpenModal(false);
+              setSavePositionCaurosel(false);
             }}
             onSubmit={async () => {
               const scrollPosition = window.scrollY;
+              const scrollPositionX = window.scrollX;
               let body = {
                 customer_id: loginReducer.authorization.customer.id,
                 product_id: productIdReducer.product.id,
@@ -282,7 +287,7 @@ const HomePage: React.FC<any> = () => {
               };
               await dispatch(orderActions.postOrders(body) as any);
               await dispatch(productActions.ProductAction() as any);
-              window.scrollTo(0, scrollPosition);
+              window.scrollTo(scrollPositionX, scrollPosition);
 
               dispatch(
                 cartActions.getCart(

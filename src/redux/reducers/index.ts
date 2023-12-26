@@ -7,10 +7,11 @@ import loginReducer, { LoginState } from "./login.reducer";
 import cartReducer, { CartState } from "./cart.reducer";
 import orderReducer, { OrderState } from "./order.reducer";
 import orderIdReducer, { OrderIdState } from "./orderId.reducer";
+import carouselReducer, { CarouselState } from "./carousel.reducer";
 
 export default combineReducers({
     registerReducer, loginReducer, productReducer
-    , productIdReducer, clearSearchReducer, orderReducer, orderIdReducer, cartReducer
+    , productIdReducer, clearSearchReducer, orderReducer, orderIdReducer, cartReducer, carouselReducer
 })
 
 export interface RootReducers {
@@ -21,5 +22,6 @@ export interface RootReducers {
     clearSearchReducer: ClearSearchState;
     orderReducer: OrderState;
     orderIdReducer: OrderIdState;
-    cartReducer: CartState
+    cartReducer: CartState;
+    carouselReducer: CarouselState;
 }

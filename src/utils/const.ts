@@ -1,6 +1,6 @@
 export const domain = 'http://localhost:3100'
 // export const domain = 'https://exuberant-colt-parka.cyclic.app'
-export const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoicGl5YXdhdEA1OTMwMzAyMjAwQGdtYWlsLmNvbSIsImZuYW1lIjoic3RyaW5nIiwibG5hbWUiOiJzdHJpbmciLCJkYXRlT2ZCaXJ0aCI6IjE5OTctMTAtMDVUMTc6MDA6MDAuMDAwWiIsImN1c3RvbWVyIjp7ImlkIjo4LCJhY2NvdW50X2lkIjoyMSwiYWRkcmVzcyI6IiIsImltYWdlIjoiIn0sImlhdCI6MTcwMzE0NDgyMywiZXhwIjoxNzAzMTgwODIzfQ._uL8hLjv1M3QPjkjgMb7_t_z2PrIwliSBeu0mBUc3lQ"
+
 
 
 
