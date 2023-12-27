@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Box, Button, Grid, Stack } from "@mui/material";
+import { Box, Button, Grid, Skeleton, Stack } from "@mui/material";
 import * as React from "react";
 import Pagination from "@mui/material/Pagination";
 import ProductTypeDropdown from "../../features/ProductTypeDropdown";
@@ -12,7 +12,7 @@ import ProductCard from "../../features/ProductCard";
 import Modal from "../../features/Modal";
 import { ModalRoleEnum } from "../../features/Modal/Modal";
 import NumberEditor from "../../features/NumberEditor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../..";
 import { useSelector } from "react-redux";
 import { RootReducers } from "../../../redux/reducers";
@@ -20,6 +20,9 @@ import { useLocation } from "react-router-dom";
 import * as productActions from "../../../redux/actions/product.action";
 import * as productIdActions from "../../../redux/actions/productId.action";
 import * as clearActions from "../../../redux/actions/clearSearch.action";
+import * as orderActions from "../../../redux/actions/order.action";
+import * as cartActions from "../../../redux/actions/cart.action";
+import orderReducer from "../../../redux/reducers/order.reducer";
 
 // type ShopPageProps = {
 //   //
@@ -36,14 +39,17 @@ const ShopPage: React.FC<any> = () => {
   const productIdReducer = useSelector(
     (state: RootReducers) => state.productIdReducer
   );
+  const orderReducer = useSelector((state: RootReducers) => state.orderReducer);
+  const loginReducer = useSelector((state: RootReducers) => state.loginReducer);
   const [searchProductName, setSearchProductName] = useState("");
   const [searchProductType, setSearchProductType] = useState("");
   const [searchProductPrice, setSearchProductPrice] = useState({});
+  const [quantity, setQuantity] = useState(1);
   const isInitialRender = React.useRef(true);
 
   //Pagination
   let [page, setPage] = React.useState(1);
-  const PER_PAGE = 10;
+  const PER_PAGE = 2;
   const count = Math.ceil(productReducer.products.length / PER_PAGE);
   const _DATA = usePagination(productReducer.products, PER_PAGE);
   const handleChange = (e: any, p: any) => {
@@ -57,7 +63,7 @@ const ShopPage: React.FC<any> = () => {
   //modal
   const [openModal, setOpenModal] = React.useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const combineSearch = {
       searchProductName,
       searchProductPrice,
@@ -107,26 +113,36 @@ const ShopPage: React.FC<any> = () => {
           ></SearchProductPrice>
         </Grid>
       </Grid>
-      <Stack
-        direction={"row"}
-        justifyContent={"center"}
-        gap={2}
-        flexWrap={"wrap"}
-      >
-        {_DATA.currentData().map((product, index) => (
-          <ProductCard
-            key={product.id}
-            handleClick={() => {
-              dispatch(productIdActions.productIdAction(product.id) as any);
-              setOpenModal(true);
-            }}
-            price={product.price}
-            productName={product.name}
-            stock={product.stock}
-            image={product?.image}
-          ></ProductCard>
-        ))}
-      </Stack>
+      {orderReducer.isFetching || productReducer.isFetching ? (
+        <>
+          <Skeleton></Skeleton>
+          <Skeleton></Skeleton>
+          <Skeleton></Skeleton>
+          <Skeleton></Skeleton>
+          <Skeleton></Skeleton>
+        </>
+      ) : (
+        <Stack
+          direction={"row"}
+          justifyContent={"center"}
+          gap={2}
+          flexWrap={"wrap"}
+        >
+          {_DATA.currentData()?.map((product, index) => (
+            <ProductCard
+              key={product.id}
+              handleClick={() => {
+                dispatch(productIdActions.productIdAction(product.id) as any);
+                setOpenModal(true);
+              }}
+              price={product.price}
+              productName={product.name}
+              stock={product.stock}
+              image={product?.image}
+            ></ProductCard>
+          ))}
+        </Stack>
+      )}
 
       <Box sx={{ display: "flex", justifyContent: "center", marginY: 5 }}>
         <Pagination
@@ -135,7 +151,8 @@ const ShopPage: React.FC<any> = () => {
           }}
           count={count}
           size="large"
-          page={page}
+          //* protect filtering product
+          page={page > count ? 1 : page}
           shape="rounded"
           onChange={handleChange}
         />
@@ -147,7 +164,28 @@ const ShopPage: React.FC<any> = () => {
         onClose={() => {
           setOpenModal(false);
         }}
-        onSubmit={() => {}}
+        onSubmit={async () => {
+          const scrollPosition = window.scrollY;
+          const body = {
+            quantity,
+            price: productIdReducer.product.price,
+            customer_id: loginReducer.authorization.customer?.id,
+            product_id: productIdReducer.product.id,
+          };
+
+          const combineSearch = {
+            searchProductName,
+            searchProductPrice,
+            searchProductType,
+          };
+
+          await dispatch(orderActions.postOrders(body) as any);
+          await dispatch(productActions.ProductAction(combineSearch) as any);
+          dispatch(
+            cartActions.getCart(loginReducer.authorization.customer.id) as any
+          );
+          window.scrollTo(0, scrollPosition);
+        }}
       >
         <Stack direction={"column"} alignItems={"center"}>
           <Box fontSize={20} fontWeight={400}>
@@ -190,7 +228,11 @@ const ShopPage: React.FC<any> = () => {
                 alignItems={"center"}
               >
                 <Box>จำนวน: </Box>
-                <NumberEditor handleValue={(value) => {}}></NumberEditor>
+                <NumberEditor
+                  handleValue={(value) => {
+                    setQuantity(value);
+                  }}
+                ></NumberEditor>
               </Box>
             </Box>
           </Stack>

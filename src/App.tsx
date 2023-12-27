@@ -185,7 +185,7 @@ export default function App() {
                 element={<EditProfilePage></EditProfilePage>}
               ></Route>
               <Route
-                path="/payment"
+                path="/payment/:id"
                 element={<PaymentPage></PaymentPage>}
               ></Route>
               <Route

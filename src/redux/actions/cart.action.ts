@@ -31,15 +31,11 @@ export const getCart = (customerId: number) => {
                     Authorization: `Bearer ${token}`
                 }
             })
-            let products = res.data?.orderDetail.map((item: any) => {
-                let calPrice = item.product.price * item.quantity
-                return { ...item, price: calPrice }
-            })
-            const newData = { ...res.data, orderDetail: [...products] }
 
-            dispatch(cartIsSuccess(newData))
+            dispatch(cartIsSuccess(res.data))
 
         } catch (error) {
+            console.log(error)
             dispatch(cartIsFail())
         }
     }

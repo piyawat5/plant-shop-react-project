@@ -4,6 +4,10 @@ import PageName from "../../features/PageName";
 import { useNavigate } from "react-router-dom";
 import { Products } from "../HomePage/HomePage";
 import ProductOrderCard from "../../features/ProductOrderCard";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
+import OrderStatus from "../../features/OrderStatus";
+import { OrderStatusEnum } from "../../types/OrderStatus";
 
 // type OrderDetailPageProps = {
 //   //
@@ -11,63 +15,46 @@ import ProductOrderCard from "../../features/ProductOrderCard";
 
 const OrderDetailPage: React.FC<any> = () => {
   const navigate = useNavigate();
-  const products: Products[] = [
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree2.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree3.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-    {
-      productName: "จุ๊กกรู้",
-      image: `${process.env.PUBLIC_URL}/images/tree1.png`,
-      stock: 200,
-      price: 400,
-    },
-  ];
+
+  //Redux
+  const orderIdReducer = useSelector(
+    (state: RootReducers) => state.orderIdReducer
+  );
+
+  function totalPrice() {
+    const result = orderIdReducer.order?.orderDetail.reduce(
+      (a: number, b: any) => {
+        return a + b.price;
+      },
+      0
+    );
+    return result;
+  }
+
   return (
     <Box>
       <PageName name="รายละเอียดคำสั่งซื้อ"></PageName>
       <Stack alignItems={"center"}>
-        <Box mr={2} width={"100%"} maxWidth={571}>
-          สถานะ: ยังไม่ได้ชำระเงิน
-        </Box>
+        <Stack
+          mr={2}
+          direction={"row"}
+          gap={1}
+          alignItems={"center"}
+          width={"100%"}
+          maxWidth={571}
+        >
+          <Box>สถานะ: </Box>
+          <Box>
+            {orderIdReducer.order?.order_status && (
+              <OrderStatus
+                name={
+                  orderIdReducer.order?.order_status &&
+                  orderIdReducer.order?.order_status
+                }
+              ></OrderStatus>
+            )}
+          </Box>
+        </Stack>
       </Stack>
       <Stack
         maxHeight={400}
@@ -77,16 +64,17 @@ const OrderDetailPage: React.FC<any> = () => {
         direction={"column"}
         alignItems={"center"}
       >
-        {products.map((product, index) => (
-          <ProductOrderCard
-            viewMode
-            key={index}
-            productName={product.productName}
-            price={product.price}
-            quantity={10}
-            image={product.image}
-          ></ProductOrderCard>
-        ))}
+        {orderIdReducer.order &&
+          orderIdReducer.order.orderDetail.map((item: any) => (
+            <ProductOrderCard
+              viewMode
+              key={item.product.id}
+              productName={item.product.name}
+              price={item.price}
+              quantity={item.quantity}
+              image={item.product.image}
+            ></ProductOrderCard>
+          ))}
       </Stack>
       <Box display={"flex"} justifyContent={"center"}>
         <Stack
@@ -98,13 +86,11 @@ const OrderDetailPage: React.FC<any> = () => {
           spacing={2}
         >
           <Box fontSize={20} fontWeight={400} textAlign={"right"}>
-            ยอดทั้งหมด: 1000000 บาท
+            ยอดทั้งหมด: {totalPrice()} บาท
           </Box>
           <Button
             onClick={() => {
-              //post api
-
-              navigate("/payment");
+              navigate(`/payment/${orderIdReducer.order?.id}`);
             }}
             variant="outlined"
           >

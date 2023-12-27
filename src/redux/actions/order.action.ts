@@ -1,6 +1,7 @@
 import axios from "axios"
 import { AnyAction, Dispatch } from "redux"
 import { domain } from "../../utils/const"
+import { OrderStatusEnum } from "../../components/types/OrderStatus"
 
 export const orderIsFetching = () => ({
     type: 'ORDER_FETCHING',
@@ -13,7 +14,7 @@ export const orderIsSuccess = (payload: any) => ({
     payload
 })
 
-export const getOrders = () => {
+export const getOrders = (combindSearch?: any) => {
     return async (dispatch: Dispatch<AnyAction>) => {
         try {
             //is fetching
@@ -26,7 +27,8 @@ export const getOrders = () => {
                 }
             })
 
-            dispatch(orderIsSuccess({ orders: res.data, msg: "get all orders successfully!" }))
+            const newData = res.data.filter((item: any) => (item.order_status !== OrderStatusEnum.CURRENT))
+            dispatch(orderIsSuccess({ orders: newData, msg: "get all orders successfully!" }))
 
         } catch (error) {
             dispatch(orderIsFail())
@@ -46,7 +48,9 @@ export const getMyOrders = (customerId: number) => {
                 }
             })
 
-            dispatch(orderIsSuccess({ orders: res.data, msg: 'get my orders successfully!' }))
+            const newData = res.data.filter((item: any) => (item.order_status !== OrderStatusEnum.CURRENT))
+
+            dispatch(orderIsSuccess({ orders: newData, msg: 'get my orders successfully!' }))
 
         } catch (error) {
             dispatch(orderIsFail())
@@ -60,12 +64,14 @@ export const postOrders = (body: any) => {
             //is fetching
             dispatch(orderIsFetching())
             const token = localStorage.getItem('TOKEN')
-            await axios.post(`${domain}/order/purchase`, body, {
+            const priceCal = body.price * body.quantity
+            const newBody = { ...body, price: priceCal }
+
+            await axios.post(`${domain}/order/purchase`, newBody, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             })
-
             dispatch(orderIsSuccess({ orders: null, msg: 'Add product to cart successfully!' }))
 
         } catch (error) {
@@ -73,26 +79,29 @@ export const postOrders = (body: any) => {
         }
     }
 }
-export const editOrder = (customerId: number) => {
+export const editOrder = (body: any, path?: string, navigate?: (pathCalback?: string) => void) => {
     return async (dispatch: Dispatch<AnyAction>) => {
         try {
             //is fetching
             dispatch(orderIsFetching())
             const token = localStorage.getItem('TOKEN')
-            await axios.put(`${domain}/order/edit`, {
+            await axios.put(`${domain}/order/edit`, body, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             })
-
             dispatch(orderIsSuccess({ orders: null, msg: 'Edit order successfully!' }))
+            if (navigate) {
+                navigate(path)
+            }
+
 
         } catch (error) {
             dispatch(orderIsFail())
         }
     }
 }
-export const deleteOrderId = (orderId: number, productId: number, quantity: number) => {
+export const deleteOrderFromCart = (orderId: number, productId: number, quantity: number) => {
     return async (dispatch: Dispatch<AnyAction>) => {
         try {
             //is fetching
@@ -105,6 +114,27 @@ export const deleteOrderId = (orderId: number, productId: number, quantity: numb
             })
 
             dispatch(orderIsSuccess({ orders: null, msg: 'remove product from cart successfully' }))
+
+
+        } catch (error) {
+            dispatch(orderIsFail())
+        }
+    }
+}
+
+export const deleteOrder = (orderId: number) => {
+    return async (dispatch: Dispatch<AnyAction>) => {
+        try {
+            //is fetching
+            dispatch(orderIsFetching())
+            const token = localStorage.getItem('TOKEN')
+            await axios.delete(`${domain}/order/deleteOrder/${orderId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+
+            dispatch(orderIsSuccess({ orders: null, msg: 'remove order successfully' }))
 
 
         } catch (error) {

@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import * as React from "react";
+import "./HomePage.css";
 import ProductCard from "../../features/ProductCard";
 import Carousel from "../../features/Carousel";
 import { Box, Grid, Skeleton, Stack, useMediaQuery } from "@mui/material";
@@ -65,7 +66,7 @@ const HomePage: React.FC<any> = () => {
     (state: RootReducers) => state.productIdReducer
   );
   const loginReducer = useSelector((state: RootReducers) => state.loginReducer);
-  const cartReducer = useSelector((state: RootReducers) => state.cartReducer);
+  const orderReducer = useSelector((state: RootReducers) => state.orderReducer);
   const categories: Categories[] = [
     {
       title: "ต้นไม้",
@@ -154,7 +155,7 @@ const HomePage: React.FC<any> = () => {
 
   return (
     <Box>
-      {productReducer.isFetching ? (
+      {productReducer.isFetching || orderReducer.isFetching ? (
         <Skeleton height={500}></Skeleton>
       ) : (
         <Box>
@@ -188,7 +189,7 @@ const HomePage: React.FC<any> = () => {
                   สินค้าขายดี
                 </Box>
                 <Carousel position={savePositionCaurosel}>
-                  {productReducer.products.map((product, index) => (
+                  {productReducer.products.map((product) => (
                     <ProductCard
                       handleClick={() => {
                         dispatch(

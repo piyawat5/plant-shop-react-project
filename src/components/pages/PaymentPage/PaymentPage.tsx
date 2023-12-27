@@ -1,8 +1,14 @@
 import { Box, Button, Stack, Tab, Tabs, useTheme } from "@mui/material";
 import * as React from "react";
 import PageName from "../../features/PageName";
-import { useNavigate } from "react-router-dom";
+import { useMatch, useNavigate } from "react-router-dom";
 import UploadImage from "../../../utils/UploadImage";
+import { useAppDispatch } from "../../..";
+import * as orderActions from "../../../redux/actions/order.action";
+import * as orderIdActions from "../../../redux/actions/orderId.action";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
+import { OrderStatusEnum } from "../../types/OrderStatus";
 
 // type PaymentPageProps = {
 //   //
@@ -16,7 +22,6 @@ interface TabPanelProps {
 
 function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
-
   return (
     <Box
       role="tabpanel"
@@ -38,7 +43,24 @@ function a11yProps(index: number) {
 }
 
 const PaymentPage: React.FC<any> = () => {
+  const match = useMatch("/payment/:id");
   const navigate = useNavigate();
+  const [imageUrl, setImageUrl] = React.useState("");
+
+  //Redux
+  const dispatch = useAppDispatch();
+  const orderIdReducer = useSelector(
+    (state: RootReducers) => state.orderIdReducer
+  );
+  function totalPrice() {
+    const result = orderIdReducer.order?.orderDetail.reduce(
+      (a: number, b: any) => {
+        return a + b.price;
+      },
+      0
+    );
+    return result;
+  }
 
   //Tab value
   const [value, setValue] = React.useState(0);
@@ -50,6 +72,10 @@ const PaymentPage: React.FC<any> = () => {
     setValue(newValue);
   };
 
+  React.useEffect(() => {
+    match?.params.id &&
+      dispatch(orderIdActions.getOrderById(+match?.params.id) as any);
+  }, []);
   return (
     <Box>
       <PageName name="การชำระเงิน"></PageName>
@@ -94,17 +120,36 @@ const PaymentPage: React.FC<any> = () => {
               <Box>เลขบัญชี xxxxxxxxxxxxx</Box>
               <Box>นาย ปิยะวัตร พินทุสรศรี</Box>
               <Box fontWeight={400} my={2}>
-                จำนวนเงินทั้งหมด: 1500 บาท
+                ยอดทั้งหมด: {totalPrice()} บาท
               </Box>
             </Stack>
             <Stack spacing={1}>
               <Box>กรุณาอัพโหลด สลิปการโอนเงิน *</Box>
-              <UploadImage handleUrl={() => {}}></UploadImage>
+              {imageUrl && <img height={450} alt="tree" src={imageUrl}></img>}
+              <UploadImage
+                handleUrl={(url) => {
+                  setImageUrl(url);
+                }}
+              ></UploadImage>
             </Stack>
             <Stack spacing={1}>
               <Button
-                onClick={() => {
-                  navigate("/my-order");
+                disabled={
+                  orderIdReducer.order?.order_status !== OrderStatusEnum.NOTPAID
+                }
+                onClick={async () => {
+                  const body = {
+                    id: orderIdReducer.order?.id,
+                    order_status: OrderStatusEnum.VERIFY,
+                    image: imageUrl,
+                  };
+                  if (imageUrl) {
+                    await dispatch(
+                      orderActions.editOrder(body, "/my-order", (path) =>
+                        navigate(path as string)
+                      ) as any
+                    );
+                  }
                 }}
                 sx={{ color: "white" }}
                 variant="contained"
@@ -158,19 +203,43 @@ const PaymentPage: React.FC<any> = () => {
             </Stack>
             <Stack spacing={1}>
               <Box>กรุณาอัพโหลด สลิปการโอนเงิน *</Box>
-              <UploadImage handleUrl={() => {}}></UploadImage>
+              {imageUrl && <img height={450} alt="tree" src={imageUrl}></img>}
+              <UploadImage
+                handleUrl={(url) => {
+                  setImageUrl(url);
+                }}
+              ></UploadImage>
             </Stack>
             <Stack spacing={1}>
               <Button
-                onClick={() => {
-                  navigate("/my-order");
+                disabled={
+                  orderIdReducer.order?.order_status !== OrderStatusEnum.NOTPAID
+                }
+                onClick={async () => {
+                  const body = {
+                    id: orderIdReducer.order?.id,
+                    order_status: OrderStatusEnum.VERIFY,
+                    image: imageUrl,
+                  };
+                  if (imageUrl) {
+                    await dispatch(
+                      orderActions.editOrder(body, "/my-order", (path) =>
+                        navigate(path as string)
+                      ) as any
+                    );
+                  }
                 }}
                 sx={{ color: "white" }}
                 variant="contained"
               >
                 ยืนยันการโอนเงิน
               </Button>
-              <Button onClick={() => {}} variant="outlined">
+              <Button
+                onClick={() => {
+                  navigate("/cart");
+                }}
+                variant="outlined"
+              >
                 ยกเลิกรายการ
               </Button>
             </Stack>
@@ -205,12 +274,31 @@ const PaymentPage: React.FC<any> = () => {
             </Stack>
             <Stack spacing={1}>
               <Box>กรุณาอัพโหลด สลิปการโอนเงิน *</Box>
-              <UploadImage handleUrl={() => {}}></UploadImage>
+              {imageUrl && <img height={450} alt="tree" src={imageUrl}></img>}
+              <UploadImage
+                handleUrl={(url) => {
+                  setImageUrl(url);
+                }}
+              ></UploadImage>
             </Stack>
             <Stack spacing={1}>
               <Button
-                onClick={() => {
-                  navigate("/my-order");
+                disabled={
+                  orderIdReducer.order?.order_status !== OrderStatusEnum.NOTPAID
+                }
+                onClick={async () => {
+                  const body = {
+                    id: orderIdReducer.order?.id,
+                    order_status: OrderStatusEnum.VERIFY,
+                    image: imageUrl,
+                  };
+                  if (imageUrl) {
+                    await dispatch(
+                      orderActions.editOrder(body, "/my-order", (path) =>
+                        navigate(path as string)
+                      ) as any
+                    );
+                  }
                 }}
                 sx={{ color: "white" }}
                 variant="contained"

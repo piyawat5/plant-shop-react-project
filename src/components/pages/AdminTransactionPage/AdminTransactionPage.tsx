@@ -21,14 +21,15 @@ import OrderStatus from "../../features/OrderStatus";
 import { OrderStatusEnum } from "../../types/OrderStatus";
 import { useAppDispatch } from "../../..";
 import * as clearActions from "../../../redux/actions/clearSearch.action";
+import * as orderActions from "../../../redux/actions/order.action";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
 
 const AdminTransactionPage: React.FC<any> = () => {
   const [searchCustomer, setSearchCustomer] = React.useState("");
   const [searchOrderType, setSearchOrderType] = React.useState("");
-  // const stockReducer = useSelector((state: RootReducers) => state.stockReducer);
-  // const stockIdReducer = useSelector(
-  //   (state: RootReducers) => state.stockIdReducer
-  // );
+  const orderReducer = useSelector((state: RootReducers) => state.orderReducer);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [role, setRole] = useState<ModalRoleEnum>(ModalRoleEnum.general);
@@ -100,12 +101,26 @@ const AdminTransactionPage: React.FC<any> = () => {
       ),
     },
     {
-      field: "customerId",
+      field: "image",
+      headerName: "รูปหลักฐานการโอนเงิน",
+      width: 150,
+      renderCell: ({ value }: GridRenderCellParams) => {
+        return (
+          <img
+            alt="Tree"
+            src={value}
+            style={{ width: 80, height: 70, borderRadius: "5%" }}
+          ></img>
+        );
+      },
+    },
+    {
+      field: "customer_id",
       headerName: "รหัสบัญชีผู้ใช้งาน",
       width: 150,
     },
     {
-      field: "status",
+      field: "order_status",
       headerName: "สถานะ",
       width: 200,
       renderCell: ({ value }: GridRenderCellParams) => (
@@ -115,33 +130,6 @@ const AdminTransactionPage: React.FC<any> = () => {
       ),
     },
     {
-      field: "name",
-      headerName: "ชื่อ",
-      width: 150,
-    },
-    {
-      field: "total",
-      headerName: "ยอดรวม",
-      width: 150,
-      renderCell: ({ value }: GridRenderCellParams) => (
-        <Typography variant="body1">
-          <NumericFormat
-            value={value}
-            displayType={"text"}
-            thousandSeparator
-            fixedDecimalScale
-            prefix="฿ "
-            decimalScale={2}
-          ></NumericFormat>
-        </Typography>
-      ),
-    },
-    {
-      field: "date",
-      headerName: "วันที่",
-      width: 150,
-    },
-    {
       field: ".",
       headerName: "การจัดการ",
       width: 150,
@@ -149,7 +137,7 @@ const AdminTransactionPage: React.FC<any> = () => {
         <Stack direction={"row"}>
           <IconButton
             onClick={() => {
-              navigate(`/admin-edit-stock/${row.id}`);
+              // navigate(`/admin-edit-stock/${row.id}`);
             }}
           >
             <EditIcon sx={{ color: "rgb(70, 70, 175)" }}></EditIcon>
@@ -175,7 +163,8 @@ const AdminTransactionPage: React.FC<any> = () => {
       searchCustomer,
       searchOrderType,
     };
-    console.log(combinefilter);
+
+    dispatch(orderActions.getOrders() as any);
   }, [searchCustomer, searchOrderType]);
 
   return (
@@ -201,8 +190,8 @@ const AdminTransactionPage: React.FC<any> = () => {
       <Box sx={{ height: "60vh", width: "100%" }}>
         <DataGrid
           sx={{ bgcolor: "white" }}
-          // loading={stockReducer.isFetching}
-          rows={orders}
+          loading={orderReducer.isFetching}
+          rows={orderReducer?.orders ? orderReducer?.orders : orders}
           columns={columns}
           getRowHeight={() => 80}
           initialState={{

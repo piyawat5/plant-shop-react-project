@@ -1,13 +1,36 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from "react";
+import React, { useState } from "react";
 import "./MyOrderCard.css";
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button, Skeleton, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../..";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
+import { OrderStatusEnum } from "../../types/OrderStatus";
+import OrderStatus from "../OrderStatus";
+import * as orderIdActions from "../../../redux/actions/orderId.action";
+import * as orderActions from "../../../redux/actions/order.action";
+import Modal from "../Modal";
+import { ModalRoleEnum } from "../Modal/Modal";
 
-type MyOrderCardProps = {};
+type MyOrderCardProps = {
+  orderId: number;
+  status: OrderStatusEnum;
+};
 
-const MyOrderCard: React.FC<MyOrderCardProps> = () => {
+const MyOrderCard: React.FC<MyOrderCardProps> = ({ orderId, status }) => {
+  const dispatch = useAppDispatch();
+  const orderIdReducer = useSelector(
+    (state: RootReducers) => state.orderIdReducer
+  );
+  const loginReducer = useSelector((state: RootReducers) => state.loginReducer);
   const navigate = useNavigate();
+
+  //modal
+  const [isOpen, setIsOpen] = useState(false);
+  const toggle = () => {
+    setIsOpen((prev) => !prev);
+  };
   return (
     <Stack
       width={"100%"}
@@ -16,18 +39,31 @@ const MyOrderCard: React.FC<MyOrderCardProps> = () => {
       bgcolor={"white"}
       borderRadius={4}
       direction={"column"}
-      spacing={3}
+      gap={6}
       p={4}
     >
-      <Box>Order Id: 1</Box>
-      <Stack justifyContent={"space-between"} direction={"row"}>
-        <Box>เวลาในการสั่งซื้อ: 12/12/23 12:30</Box>
-        <Box>สถานะ ยังไม่ได้ชำระเงิน</Box>
+      <Stack
+        direction={"row"}
+        justifyContent={"space-between"}
+        flexWrap={"wrap"}
+        alignItems={"center"}
+        gap={2}
+      >
+        <Box>Order Id: {orderId}</Box>
+        <Stack direction={"row"} alignItems={"center"} gap={1}>
+          <Box>สถานะ:</Box>
+          <Box>
+            <OrderStatus name={status}></OrderStatus>
+          </Box>
+        </Stack>
       </Stack>
       <Stack alignItems={"flex-end"}>
-        <Stack spacing={1} direction={"row"}>
+        <Stack flexWrap={"wrap"} gap={1} direction={"row"}>
           <Button
-            onClick={() => navigate("/order-detail")}
+            onClick={() => {
+              dispatch(orderIdActions.getOrderById(orderId) as any);
+              navigate("/order-detail");
+            }}
             size="small"
             sx={{ color: "white", borderRadius: 100 }}
             variant="contained"
@@ -35,18 +71,61 @@ const MyOrderCard: React.FC<MyOrderCardProps> = () => {
             ดูรายละเอียด
           </Button>
           <Button
-            onClick={() => navigate("/payment")}
+            disabled={status !== OrderStatusEnum.NOTPAID}
+            onClick={() => {
+              navigate(`/payment/${orderId}`);
+            }}
             size="small"
             sx={{ color: "white", borderRadius: 100 }}
             variant="contained"
           >
             ชำระเงิน
           </Button>
-          <Button size="small" variant="outlined" sx={{ borderRadius: 100 }}>
+          <Button
+            onClick={() => {
+              dispatch(orderIdActions.getOrderById(orderId) as any);
+              setIsOpen(true);
+            }}
+            disabled={status !== OrderStatusEnum.NOTPAID}
+            size="small"
+            variant="outlined"
+            sx={{ borderRadius: 100 }}
+          >
             ยกเลิกคำสั่งซื้อ
           </Button>
         </Stack>
       </Stack>
+
+      <Modal
+        isOpen={isOpen}
+        role={ModalRoleEnum.confirmDelete}
+        onSubmit={async () => {
+          await dispatch(
+            orderActions.deleteOrder(orderIdReducer.order?.id) as any
+          );
+
+          await dispatch(
+            orderActions.getMyOrders(
+              loginReducer.authorization?.customer?.id
+            ) as any
+          );
+        }}
+        onClose={toggle}
+      >
+        {orderIdReducer.isFetching ? (
+          <>
+            <Skeleton animation="wave"></Skeleton>
+            <Skeleton animation="wave"></Skeleton>
+            <Skeleton animation="wave"></Skeleton>
+            <Box sx={{ my: 2 }}></Box>
+          </>
+        ) : (
+          <Box sx={{ textAlign: "center" }}>
+            <h1 className="modal-title">Confirm delete</h1>
+            <Box>Do you want to delete {orderIdReducer.order?.id}?</Box>
+          </Box>
+        )}
+      </Modal>
     </Stack>
   );
 };

@@ -5,7 +5,8 @@ const usePagination = (data: any[], itemsPerPage: number) => {
     const maxPage = Math.ceil(data.length / itemsPerPage);
 
     function currentData() {
-        const begin = (currentPage - 1) * itemsPerPage;
+        //* protect filtering product
+        const begin = ((currentPage > maxPage ? 1 : currentPage) - 1) * itemsPerPage;
         const end = begin + itemsPerPage;
         return data.slice(begin, end);
     }
@@ -20,6 +21,8 @@ const usePagination = (data: any[], itemsPerPage: number) => {
     function jump(page: number) {
         const pageNumber = Math.max(1, page);
         setCurrentPage(currentPage => Math.min(pageNumber, maxPage));
+
+        console.log(pageNumber, maxPage)
     }
     return { next, prev, jump, currentData, currentPage, maxPage };
 };

@@ -8,11 +8,12 @@ import { useNavigate } from "react-router-dom";
 import ProductOrderCard from "../../features/ProductOrderCard";
 import { useSelector } from "react-redux";
 import { RootReducers } from "../../../redux/reducers";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../..";
 import * as cartActions from "../../../redux/actions/cart.action";
 import * as orderActions from "../../../redux/actions/order.action";
 import * as productIdActions from "../../../redux/actions/productId.action";
+import { OrderStatusEnum } from "../../types/OrderStatus";
 
 // type CartPageProps = {
 //   //
@@ -31,8 +32,18 @@ const CartPage: React.FC<any> = () => {
   );
 
   //modal
-  const [openModal, setOpenModal] = React.useState(false);
-  const [role, setRole] = React.useState(ModalRoleEnum.general);
+  const [openModal, setOpenModal] = useState(false);
+  const [role, setRole] = useState(ModalRoleEnum.general);
+
+  function totalPrice() {
+    const result = cartReducer.order?.orderDetail.reduce(
+      (a: number, b: any) => {
+        return a + b.price;
+      },
+      0
+    );
+    return result;
+  }
 
   useEffect(() => {
     dispatch(
@@ -60,7 +71,7 @@ const CartPage: React.FC<any> = () => {
                 await dispatch(
                   productIdActions.productIdAction(item.product?.id) as any
                 );
-                setRole(ModalRoleEnum.general);
+                setRole(ModalRoleEnum.confirm);
                 setOpenModal(true);
               }}
               handleClickDelete={async () => {
@@ -89,23 +100,30 @@ const CartPage: React.FC<any> = () => {
           spacing={2}
         >
           <Box fontSize={20} fontWeight={400} textAlign={"right"}>
-            ยอดทั้งหมด: 1000000 บาท
+            ยอดทั้งหมด: {totalPrice()} บาท
           </Box>
           <Button
             onClick={() => {
               //post api
-
-              navigate("/payment");
+              const body = {
+                id: cartReducer.order?.id,
+                order_status: OrderStatusEnum.NOTPAID,
+              };
+              dispatch(orderActions.editOrder(body) as any);
+              navigate(`/payment/${cartReducer.order?.id}`);
             }}
             sx={{ color: "white" }}
             variant="contained"
-            disabled={cartReducer.order?.orderDetail?.length < 1}
+            disabled={
+              cartReducer.order?.orderDetail?.length < 1 ||
+              !cartReducer.order?.orderDetail
+            }
           >
             สั่งซื้อสินค้า
           </Button>
         </Stack>
       </Box>
-      {role === ModalRoleEnum.general ? (
+      {role === ModalRoleEnum.confirm ? (
         <Modal
           onClose={() => setOpenModal(false)}
           isOpen={openModal}
@@ -192,7 +210,7 @@ const CartPage: React.FC<any> = () => {
                 (item: any) => item.product?.id === productIdReducer.product?.id
               );
             await dispatch(
-              orderActions.deleteOrderId(
+              orderActions.deleteOrderFromCart(
                 cartReducer.order.id,
                 productIdReducer.product.id,
                 findOrderDetailByProductId.quantity
