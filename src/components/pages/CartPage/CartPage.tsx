@@ -109,8 +109,11 @@ const CartPage: React.FC<any> = () => {
                 id: cartReducer.order?.id,
                 order_status: OrderStatusEnum.NOTPAID,
               };
-              dispatch(orderActions.editOrder(body) as any);
-              navigate(`/payment/${cartReducer.order?.id}`);
+              dispatch(
+                orderActions.editOrder(body, () =>
+                  navigate(`/payment/${cartReducer.order?.id}`)
+                ) as any
+              );
             }}
             sx={{ color: "white" }}
             variant="contained"

@@ -6,9 +6,9 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { OrderStatusEnum } from "../../types/OrderStatus";
-import * as clearActions from "../../../redux/actions/clearSearch.action";
 import { useSelector } from "react-redux";
 import { RootReducers } from "../../../redux/reducers";
+import "./OrderStatusDropdown.css";
 
 type OrderStatusDropdownProps = {
   handleValue: (value: string) => void;
@@ -34,13 +34,13 @@ const OrderStatusDropdown: React.FC<OrderStatusDropdownProps> = ({
   return (
     <Box sx={{ minWidth: 236 }} width={"100%"}>
       <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">ประเภท</InputLabel>
+        <InputLabel id="demo-simple-select-label">สถานะ</InputLabel>
         <Select
           sx={{ bgcolor: "white" }}
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={value}
-          label="ประเภท"
+          label="สถานะ"
           onChange={(e) => {
             setValue(e.target.value);
           }}

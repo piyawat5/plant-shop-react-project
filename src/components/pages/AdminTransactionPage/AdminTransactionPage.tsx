@@ -29,14 +29,12 @@ import { RootReducers } from "../../../redux/reducers";
 const AdminTransactionPage: React.FC<any> = () => {
   const [search, setSearch] = useState("");
   const [searchOrderStatus, setSearchOrderStatus] = useState("");
-  const [orderStatus, setOrderStatus] = useState("");
   const orderReducer = useSelector((state: RootReducers) => state.orderReducer);
   const orderIdReducer = useSelector(
     (state: RootReducers) => state.orderIdReducer
   );
 
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const [role, setRole] = useState<ModalRoleEnum>(ModalRoleEnum.general);
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => {
@@ -225,7 +223,7 @@ const AdminTransactionPage: React.FC<any> = () => {
 
       {role === ModalRoleEnum.confirm ? (
         <Modal
-          textConfirm="เพิ่มไปยังตระกร้า"
+          textConfirm="ตรวจสอบการโอนเงินสำเร็จ"
           role={ModalRoleEnum.confirm}
           isOpen={isOpen}
           onClose={() => {
@@ -234,15 +232,21 @@ const AdminTransactionPage: React.FC<any> = () => {
           onSubmit={() => {
             const body = {
               id: orderIdReducer.order?.id,
-              order_status: orderStatus,
+              order_status: OrderStatusEnum.PAID,
               image: orderIdReducer.order?.image,
             };
-            dispatch(orderActions.editOrder(body) as any);
+            const combinefilter = {
+              search,
+              searchOrderStatus,
+            };
+
+            dispatch(
+              orderActions.editOrder(body, () => {
+                dispatch(orderActions.getOrders(combinefilter) as any);
+              }) as any
+            );
           }}
         >
-          <OrderStatusDropdown
-            handleValue={(value) => {}}
-          ></OrderStatusDropdown>
           <Stack direction={"column"} gap={1} alignItems={"center"}>
             <Box fontSize={20} fontWeight={400}>
               รหัสอ้างอิง {orderIdReducer.order?.id}

@@ -145,8 +145,8 @@ const PaymentPage: React.FC<any> = () => {
                   };
                   if (imageUrl) {
                     await dispatch(
-                      orderActions.editOrder(body, "/my-order", (path) =>
-                        navigate(path as string)
+                      orderActions.editOrder(body, () =>
+                        navigate("/my-order")
                       ) as any
                     );
                   }
@@ -157,7 +157,13 @@ const PaymentPage: React.FC<any> = () => {
                 ยืนยันการโอนเงิน
               </Button>
               <Button
+                disabled={
+                  orderIdReducer.order?.order_status !== OrderStatusEnum.NOTPAID
+                }
                 onClick={() => {
+                  dispatch(
+                    orderActions.deleteOrder(orderIdReducer.order?.id) as any
+                  );
                   navigate("/cart");
                 }}
                 variant="outlined"
@@ -223,8 +229,8 @@ const PaymentPage: React.FC<any> = () => {
                   };
                   if (imageUrl) {
                     await dispatch(
-                      orderActions.editOrder(body, "/my-order", (path) =>
-                        navigate(path as string)
+                      orderActions.editOrder(body, () =>
+                        navigate("/my-order")
                       ) as any
                     );
                   }
@@ -294,8 +300,8 @@ const PaymentPage: React.FC<any> = () => {
                   };
                   if (imageUrl) {
                     await dispatch(
-                      orderActions.editOrder(body, "/my-order", (path) =>
-                        navigate(path as string)
+                      orderActions.editOrder(body, () =>
+                        navigate("/my-order")
                       ) as any
                     );
                   }
@@ -306,7 +312,13 @@ const PaymentPage: React.FC<any> = () => {
                 ยืนยันการโอนเงิน
               </Button>
               <Button
+                disabled={
+                  orderIdReducer.order?.order_status !== OrderStatusEnum.NOTPAID
+                }
                 onClick={() => {
+                  dispatch(
+                    orderActions.deleteOrder(orderIdReducer.order?.id) as any
+                  );
                   navigate("/cart");
                 }}
                 variant="outlined"

@@ -89,7 +89,7 @@ export const postOrders = (body: any) => {
         }
     }
 }
-export const editOrder = (body: any, path?: string, navigate?: (pathCalback?: string) => void) => {
+export const editOrder = (body: any, next?: () => void) => {
     return async (dispatch: Dispatch<AnyAction>) => {
         try {
             //is fetching
@@ -101,10 +101,9 @@ export const editOrder = (body: any, path?: string, navigate?: (pathCalback?: st
                 }
             })
             dispatch(orderIsSuccess({ orders: null, msg: 'Edit order successfully!' }))
-            if (navigate) {
-                navigate(path)
+            if (next) {
+                next()
             }
-
 
         } catch (error) {
             dispatch(orderIsFail())
