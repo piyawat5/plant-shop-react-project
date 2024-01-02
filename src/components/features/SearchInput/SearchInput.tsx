@@ -6,9 +6,13 @@ import { RootReducers } from "../../../redux/reducers";
 
 type SearchInputProps = {
   handleValue: (value: string) => void;
+  label?: string;
 };
 
-const SearchInput: React.FC<SearchInputProps> = ({ handleValue }) => {
+const SearchInput: React.FC<SearchInputProps> = ({
+  handleValue,
+  label = "ค้นหา",
+}) => {
   const [search, setSearch] = React.useState("");
   const clearSearchReducer = useSelector(
     (state: RootReducers) => state.clearSearchReducer
@@ -48,7 +52,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ handleValue }) => {
     <TextField
       fullWidth
       sx={{ bgcolor: "white" }}
-      label="ค้นหาชื่อสินค้า"
+      label={label}
       value={search}
       variant="outlined"
       onChange={(e) => {

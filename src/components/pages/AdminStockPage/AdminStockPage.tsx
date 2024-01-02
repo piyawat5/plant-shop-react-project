@@ -188,7 +188,10 @@ const AdminStockPage: React.FC<any> = () => {
       </Stack>
       <Grid container gap={3} marginBottom={4}>
         <Grid item xs={12} sm={12} lg={12}>
-          <SearchInput handleValue={setSearchProductName}></SearchInput>
+          <SearchInput
+            label="ค้นหาชื่อสินค้า"
+            handleValue={setSearchProductName}
+          ></SearchInput>
         </Grid>
         <Grid item xs={12} sm={5.5} lg={5.5}>
           <ProductTypeDropdown

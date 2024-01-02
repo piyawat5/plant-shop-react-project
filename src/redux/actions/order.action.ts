@@ -28,7 +28,17 @@ export const getOrders = (combindSearch?: any) => {
             })
 
             const newData = res.data.filter((item: any) => (item.order_status !== OrderStatusEnum.CURRENT))
-            dispatch(orderIsSuccess({ orders: newData, msg: "get all orders successfully!" }))
+
+            const filterNewData = newData.filter((item: any) => (item.id.toString().includes(combindSearch.search))).filter((item: any) => {
+                if (combindSearch.searchOrderStatus) {
+                    return item.order_status === combindSearch.searchOrderStatus
+                } else {
+                    return true
+                }
+            }
+            )
+
+            dispatch(orderIsSuccess({ orders: combindSearch ? filterNewData : newData, msg: "get all orders successfully!" }))
 
         } catch (error) {
             dispatch(orderIsFail())

@@ -22,13 +22,18 @@ import { OrderStatusEnum } from "../../types/OrderStatus";
 import { useAppDispatch } from "../../..";
 import * as clearActions from "../../../redux/actions/clearSearch.action";
 import * as orderActions from "../../../redux/actions/order.action";
+import * as orderIdActions from "../../../redux/actions/orderId.action";
 import { useSelector } from "react-redux";
 import { RootReducers } from "../../../redux/reducers";
 
 const AdminTransactionPage: React.FC<any> = () => {
-  const [searchCustomer, setSearchCustomer] = React.useState("");
-  const [searchOrderType, setSearchOrderType] = React.useState("");
+  const [search, setSearch] = useState("");
+  const [searchOrderStatus, setSearchOrderStatus] = useState("");
+  const [orderStatus, setOrderStatus] = useState("");
   const orderReducer = useSelector((state: RootReducers) => state.orderReducer);
+  const orderIdReducer = useSelector(
+    (state: RootReducers) => state.orderIdReducer
+  );
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -42,7 +47,7 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       id: 1,
       customerId: 1,
-      status: OrderStatusEnum.VERIFY,
+      order_status: OrderStatusEnum.VERIFY,
       name: "ปิยะวัตร",
       total: 15000,
       date: "12-12-2022",
@@ -50,7 +55,7 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       id: 2,
       customerId: 1,
-      status: OrderStatusEnum.NOTPAID,
+      order_status: OrderStatusEnum.NOTPAID,
       name: "ปิยะวัตร",
       total: 15000,
       date: "12-12-2022",
@@ -58,7 +63,7 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       id: 3,
       customerId: 1,
-      status: OrderStatusEnum.PAID,
+      order_status: OrderStatusEnum.PAID,
       name: "ปิยะวัตร",
       total: 15000,
       date: "12-12-2022",
@@ -66,7 +71,7 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       id: 4,
       customerId: 1,
-      status: OrderStatusEnum.COMPLETE,
+      order_status: OrderStatusEnum.COMPLETE,
       name: "ปิยะวัตร",
       total: 15000,
       date: "12-12-2022",
@@ -74,7 +79,7 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       id: 5,
       customerId: 1,
-      status: OrderStatusEnum.PAID,
+      order_status: OrderStatusEnum.PAID,
       name: "ปิยะวัตร",
       total: 15000,
       date: "12-12-2022",
@@ -82,12 +87,22 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       id: 6,
       customerId: 1,
-      status: OrderStatusEnum.COMPLETE,
+      order_status: OrderStatusEnum.COMPLETE,
       name: "ปิยะวัตร",
       total: 15000,
       date: "12-12-2022",
     },
   ];
+
+  function totalPrice() {
+    const result = orderIdReducer.order?.orderDetail.reduce(
+      (a: number, b: any) => {
+        return a + b.price;
+      },
+      0
+    );
+    return result;
+  }
 
   const columns: GridColDef[] = [
     {
@@ -137,7 +152,9 @@ const AdminTransactionPage: React.FC<any> = () => {
         <Stack direction={"row"}>
           <IconButton
             onClick={() => {
-              // navigate(`/admin-edit-stock/${row.id}`);
+              setRole(ModalRoleEnum.confirm);
+              dispatch(orderIdActions.getOrderById(row.id) as any);
+              toggle();
             }}
           >
             <EditIcon sx={{ color: "rgb(70, 70, 175)" }}></EditIcon>
@@ -160,12 +177,12 @@ const AdminTransactionPage: React.FC<any> = () => {
 
   useEffect(() => {
     const combinefilter = {
-      searchCustomer,
-      searchOrderType,
+      search,
+      searchOrderStatus,
     };
 
-    dispatch(orderActions.getOrders() as any);
-  }, [searchCustomer, searchOrderType]);
+    dispatch(orderActions.getOrders(combinefilter) as any);
+  }, [search, searchOrderStatus]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -181,9 +198,9 @@ const AdminTransactionPage: React.FC<any> = () => {
         </Button>
       </Stack>
       <Stack direction={"column"} gap={3} marginBottom={4}>
-        <SearchInput handleValue={setSearchCustomer}></SearchInput>
+        <SearchInput handleValue={setSearch}></SearchInput>
         <OrderStatusDropdown
-          handleValue={setSearchOrderType}
+          handleValue={setSearchOrderStatus}
         ></OrderStatusDropdown>
       </Stack>
 
@@ -206,41 +223,43 @@ const AdminTransactionPage: React.FC<any> = () => {
         />
       </Box>
 
-      {role === ModalRoleEnum.general ? (
+      {role === ModalRoleEnum.confirm ? (
         <Modal
           textConfirm="เพิ่มไปยังตระกร้า"
-          role={ModalRoleEnum.general}
+          role={ModalRoleEnum.confirm}
           isOpen={isOpen}
           onClose={() => {
             toggle();
           }}
-          onSubmit={() => {}}
+          onSubmit={() => {
+            const body = {
+              id: orderIdReducer.order?.id,
+              order_status: orderStatus,
+              image: orderIdReducer.order?.image,
+            };
+            dispatch(orderActions.editOrder(body) as any);
+          }}
         >
-          <Stack direction={"column"} alignItems={"center"}>
+          <OrderStatusDropdown
+            handleValue={(value) => {}}
+          ></OrderStatusDropdown>
+          <Stack direction={"column"} gap={1} alignItems={"center"}>
             <Box fontSize={20} fontWeight={400}>
-              ต้นหอมจริงๆ
+              รหัสอ้างอิง {orderIdReducer.order?.id}
             </Box>
-            <img
-              alt="tree"
-              height={200}
-              src={`${process.env.PUBLIC_URL}/images/tree2.png`}
-            ></img>
-            <Stack direction={"column"} spacing={2} width={300}>
+            <img alt="tree" width={250} src={orderIdReducer.order?.image}></img>
+            <Stack direction={"column"} gap={1} width={300}>
               <Box>
-                <span style={{ fontWeight: 400 }}>รายละเอียด: </span>
+                <span style={{ fontWeight: 400 }}>ราคาทั้งหมด: </span>
                 <span style={{ fontWeight: 300, color: "grey" }}>
-                  เป็นต้นที่สวยงามจุงเบย
+                  {totalPrice()}
                 </span>
               </Box>
               <Box>
-                <span style={{ fontWeight: 400 }}>สต็อก: </span>
-
-                <span style={{ fontWeight: 300, color: "grey" }}>10</span>
-              </Box>
-              <Box>
-                <span style={{ fontWeight: 400 }}> ราคา: </span>
-
-                <span style={{ fontWeight: 300, color: "grey" }}>200</span>
+                <span style={{ fontWeight: 400 }}>รหัสบัญชีผู้ใช้งาน: </span>
+                <span style={{ fontWeight: 300, color: "grey" }}>
+                  {orderIdReducer.order?.customer_id}
+                </span>
               </Box>
             </Stack>
           </Stack>
