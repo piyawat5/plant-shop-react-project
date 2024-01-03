@@ -8,18 +8,35 @@ import MyDatepicker from "../../features/MyDatepicker";
 import { useSelector } from "react-redux";
 import { RootReducers } from "../../../redux/reducers";
 import * as registerActions from "../../../redux/actions/register.action";
+import * as Yup from "yup";
 
 // type RegisterPageProps = {
 //   //
 // };
 
 const RegisterPage: React.FC<any> = () => {
-  const [confirmPassword, setConfirmPassword] = React.useState("");
+  // const [confirmPassword, setConfirmPassword] = React.useState("");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const registerReducer = useSelector(
     (state: RootReducers) => state.registerReducer
   );
+
+  const validationSchema = Yup.object().shape({
+    fname: Yup.string().required("กรุณากรอกชื่อ"),
+    lname: Yup.string().required("กรุณากรอกนามสกุล"),
+    email: Yup.string()
+      .email("รูปแบบอีเมลไม่ถูกต้อง")
+      .required("กรุณากรอกอีเมล"),
+    password: Yup.string()
+      .min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร")
+      .matches(/[A-Z]/, "รหัสผ่านต้องมีอย่างน้อย 1 ตัวอักษรพิมพ์ใหญ่")
+      .max(15, "รหัสผ่านต้องไม่เกิน 15 ตัวอักษร")
+      .required("กรุณากรอกรหัสผ่าน"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null as any], "รหัสผ่านไม่ตรงกัน")
+      .required("กรุณายืนยันรหัสผ่าน"),
+  });
 
   const Form = ({
     handleSubmit,
@@ -27,6 +44,8 @@ const RegisterPage: React.FC<any> = () => {
     setFieldValue,
     isSubmitting,
     values,
+    errors,
+    touched,
   }: FormikProps<any>) => {
     return (
       <form action="" onSubmit={handleSubmit}>
@@ -47,9 +66,15 @@ const RegisterPage: React.FC<any> = () => {
               label="ชื่อ"
               variant="outlined"
               autoFocus
-              required
               fullWidth
+              error={touched.fname && Boolean(errors.fname)}
+              helperText={
+                touched.fname ? (errors.fname as React.ReactNode) : undefined
+              }
             ></TextField>
+            {/* {Boolean(errors.fname) && (
+              <Box color={"red"}>{errors.fname as React.ReactNode}</Box>
+            )} */}
             <TextField
               onChange={handleChange}
               value={values.lname}
@@ -58,7 +83,10 @@ const RegisterPage: React.FC<any> = () => {
               variant="outlined"
               disabled={registerReducer.isFetching}
               fullWidth
-              required
+              error={touched.lname && Boolean(errors.lname)}
+              helperText={
+                touched.lname ? (errors.lname as React.ReactNode) : undefined
+              }
             ></TextField>
           </Stack>
           <TextField
@@ -69,29 +97,45 @@ const RegisterPage: React.FC<any> = () => {
             label="Email"
             variant="outlined"
             fullWidth
-            required
+            error={touched.email && Boolean(errors.email)}
+            helperText={
+              touched.email ? (errors.email as React.ReactNode) : undefined
+            }
           ></TextField>
           <TextField
             onChange={handleChange}
             value={values.password}
             disabled={registerReducer.isFetching}
+            type="password"
             id="password"
             label="รหัสผ่าน"
             variant="outlined"
             fullWidth
-            required
+            error={touched.password && Boolean(errors.password)}
+            helperText={
+              touched.password
+                ? (errors.password as React.ReactNode)
+                : "รหัสผ่านต้องมีอย่างน้อย 1 ตัวอักษรพิมพ์ใหญ่ และต้องมีอย่างน้อย 6 ตัวอักษร"
+            }
           ></TextField>
+          {/* {Boolean(errors.password) && (
+            <Box color={"red"}>{errors.password as React.ReactNode}</Box>
+          )} */}
           <TextField
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
-            }}
-            value={confirmPassword}
+            onChange={handleChange}
+            value={values.confirmPassword}
             disabled={registerReducer.isFetching}
+            type="password"
             id="confirmPassword"
             label="ยืนยันรหัสผ่าน"
             variant="outlined"
             fullWidth
-            required
+            error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+            helperText={
+              touched.confirmPassword
+                ? (errors.confirmPassword as React.ReactNode)
+                : undefined
+            }
           ></TextField>
 
           <MyDatepicker
@@ -132,6 +176,7 @@ const RegisterPage: React.FC<any> = () => {
     dateOfBirth: new Date(),
     email: "",
     password: "",
+    confirmPassword: "",
   };
 
   const formatDate = (date: Date) => {
@@ -145,9 +190,12 @@ const RegisterPage: React.FC<any> = () => {
           <PageName name="สมัครสมาชิก ฟรี!"></PageName>
           <Formik
             initialValues={initial}
+            validationSchema={validationSchema}
             onSubmit={async (value, { setSubmitting }) => {
-              const body = {
-                ...value,
+              let { confirmPassword, ...body } = value;
+
+              body = {
+                ...body,
                 dateOfBirth: formatDate(value?.dateOfBirth),
               };
               dispatch(

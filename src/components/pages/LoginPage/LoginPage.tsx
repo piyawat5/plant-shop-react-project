@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, FormikProps } from "formik";
-import { Box, Button, Stack, TextField } from "@mui/material";
+import { Alert, Box, Button, Stack, TextField } from "@mui/material";
 import PageName from "../../features/PageName";
 import { useSelector } from "react-redux";
 import { RootReducers } from "../../../redux/reducers";
@@ -45,12 +45,16 @@ const LoginPage: React.FC<any> = () => {
             onChange={handleChange}
             value={values.password}
             disabled={loginReducer.isFetching}
+            type="password"
             id="password"
             label="รหัสผ่าน"
             variant="outlined"
             fullWidth
             required
           ></TextField>
+          {loginReducer.msg === "404" && (
+            <Alert severity="error">Incorrect username or password</Alert>
+          )}
           <Stack direction={"column-reverse"} spacing={2}>
             <Button
               onClick={() => navigate("/register")}

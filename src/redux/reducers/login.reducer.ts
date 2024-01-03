@@ -19,7 +19,7 @@ export default (state = initialState, { type, payload }: any): LoginState => {
         case 'LOGIN_FETCHING':
             return { isFetching: true, isFalse: false, authorization: null, msg: null }
         case 'LOGIN_FAIL':
-            return { isFetching: false, isFalse: true, authorization: null, msg: null }
+            return { isFetching: false, isFalse: true, authorization: null, msg: payload ? payload : null }
         case 'LOGIN_SUCCESS':
             return { isFetching: false, isFalse: false, authorization: payload.authorization, msg: payload.msg }
         case 'LOGOUT_SUCCESS':

@@ -1,13 +1,13 @@
 import { AnyAction, Dispatch } from "redux"
 import { domain } from "../../utils/const"
 import axios from "axios"
-import { Any } from "react-spring"
 
 export const loginIsFetching = () => ({
     type: 'LOGIN_FETCHING',
 })
-export const loginIsFail = () => ({
+export const loginIsFail = (payload?: any) => ({
     type: 'LOGIN_FAIL',
+    payload
 })
 export const loginIsSuccess = (payload: any) => ({
     type: 'LOGIN_SUCCESS',
@@ -41,12 +41,12 @@ export const loginAction = (body: any, navigate: (path: string) => void) => {
                 navigate('/home')
                 return;
             }
-            if (authen.status === 404) {
-                dispatch(loginIsFail())
+
+        } catch (error: any) {
+            if (error.response.status === 404) {
+                dispatch(loginIsFail('404'))
                 return;
             }
-
-        } catch (error) {
             dispatch(loginIsFail())
 
         }
