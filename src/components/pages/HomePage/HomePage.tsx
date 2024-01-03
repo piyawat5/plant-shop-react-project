@@ -18,6 +18,7 @@ import * as productActions from "../../../redux/actions/product.action";
 import * as productIdActions from "../../../redux/actions/productId.action";
 import * as orderActions from "../../../redux/actions/order.action";
 import * as cartActions from "../../../redux/actions/cart.action";
+import * as customerActions from "../../../redux/actions/customer.action";
 import { useState } from "react";
 
 // type HomePageProps = {
@@ -67,6 +68,9 @@ const HomePage: React.FC<any> = () => {
   );
   const loginReducer = useSelector((state: RootReducers) => state.loginReducer);
   const orderReducer = useSelector((state: RootReducers) => state.orderReducer);
+  const customerReducer = useSelector(
+    (state: RootReducers) => state.customerReducer
+  );
   const categories: Categories[] = [
     {
       title: "ต้นไม้",
@@ -151,6 +155,11 @@ const HomePage: React.FC<any> = () => {
 
   React.useEffect(() => {
     dispatch(productActions.ProductAction() as any);
+    dispatch(
+      customerActions.getCustomerById(
+        loginReducer.authorization.customer.id
+      ) as any
+    );
   }, []);
 
   return (
@@ -162,8 +171,8 @@ const HomePage: React.FC<any> = () => {
           <Grid alignItems={"center"} spacing={3} container marginBottom={5}>
             <Grid item textAlign={"center"} xs={12} sm={12} md={12} lg={6}>
               <Box fontSize={xs ? 20 : 24}>
-                ยินดีต้อนรับ คุณ {loginReducer.authorization.fname}{" "}
-                {loginReducer.authorization.lname}
+                ยินดีต้อนรับ คุณ {customerReducer.customer?.fname}{" "}
+                {customerReducer.customer?.lname}
               </Box>
               <Box display={"flex"} justifyContent={"center"} width={"100%"}>
                 <Stack

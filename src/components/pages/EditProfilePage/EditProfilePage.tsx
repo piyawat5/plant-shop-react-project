@@ -5,12 +5,23 @@ import PageName from "../../features/PageName";
 import { useNavigate } from "react-router-dom";
 import UploadImage from "../../../utils/UploadImage";
 import { Formik, FormikProps } from "formik";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../../../redux/reducers";
+import * as customerActions from "../../../redux/actions/customer.action";
+import { useAppDispatch } from "../../..";
+import { useState } from "react";
 
 // type ProfilePageProps = {
 //   //
 // };
 
 const EditProfilePage: React.FC<any> = () => {
+  const loginReducer = useSelector((state: RootReducers) => state.loginReducer);
+  const [imageUrl, setImageUrl] = useState("");
+  const customerReducer = useSelector(
+    (state: RootReducers) => state.customerReducer
+  );
+  const dispatch = useAppDispatch();
   const initial = {
     fname: "",
     lname: "",
@@ -20,6 +31,19 @@ const EditProfilePage: React.FC<any> = () => {
   };
   const navigate = useNavigate();
   const xs = useMediaQuery("(max-width: 600px)");
+  const checkImage = () => {
+    if (customerReducer.customer?.image) {
+      if (imageUrl) {
+        return imageUrl;
+      }
+      return customerReducer.customer?.image;
+    }
+
+    if (imageUrl) {
+      return imageUrl;
+    }
+    return `${process.env.PUBLIC_URL}/images/avatar.png`;
+  };
 
   const Form = ({
     handleSubmit,
@@ -47,12 +71,13 @@ const EditProfilePage: React.FC<any> = () => {
               style={{ outline: "12px solid #EFEFEF", borderRadius: 100 }}
               height={200}
               width={200}
-              src={`${process.env.PUBLIC_URL}/images/avatar.png`}
+              src={checkImage()}
             ></img>
           </Box>
           <UploadImage
             handleUrl={(url) => {
               setFieldValue("image", url);
+              setImageUrl(url);
             }}
           ></UploadImage>
           <TextField
@@ -79,7 +104,7 @@ const EditProfilePage: React.FC<any> = () => {
             <Button
               onClick={() => navigate("/profile")}
               variant="outlined"
-              // disabled={registerReducer.isFetching}
+              disabled={customerReducer.isFetching}
               color="primary"
               type="button"
               fullWidth
@@ -91,7 +116,7 @@ const EditProfilePage: React.FC<any> = () => {
                 color: "#fff",
               }}
               variant="contained"
-              // disabled={registerReducer.isFetching}
+              disabled={customerReducer.isFetching}
               color="primary"
               type="submit"
               fullWidth
@@ -108,10 +133,24 @@ const EditProfilePage: React.FC<any> = () => {
       <PageName name="แก้ไขโปรไฟล์"></PageName>
 
       <Formik
-        initialValues={initial}
+        initialValues={
+          customerReducer.customer ? customerReducer.customer : initial
+        }
         onSubmit={async (value, { setSubmitting }) => {
-          console.log(value);
-          setSubmitting(false);
+          const body = {
+            id: value.id,
+            account_id: loginReducer.authorization.id,
+            address: value.address,
+            fname: value.fname,
+            lname: value.lname,
+            email: value.email,
+            image: value.image,
+          };
+          dispatch(
+            customerActions.editCustomerAction(body, () => {
+              navigate("/profile");
+            }) as any
+          );
         }}
       >
         {(props) => Form(props)}

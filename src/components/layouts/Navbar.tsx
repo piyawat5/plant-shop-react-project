@@ -23,13 +23,15 @@ interface Props {
 }
 
 export default function Navbar({ openDrawer }: Props) {
-  const [badge, setBadge] = useState(0);
   const navigate = useNavigate();
 
   //Redux
   const dispatch = useAppDispatch();
   const cartReducer = useSelector((state: RootReducers) => state.cartReducer);
   const loginReducer = useSelector((state: RootReducers) => state.loginReducer);
+  const customerReducer = useSelector(
+    (state: RootReducers) => state.customerReducer
+  );
 
   //Menu list
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -139,7 +141,17 @@ export default function Navbar({ openDrawer }: Props) {
           onClick={handleProfileMenuOpen}
           color="inherit"
         >
-          <AccountCircle />
+          {customerReducer.customer?.image ? (
+            <img
+              alt="profile"
+              style={{ borderRadius: 40 }}
+              height={24}
+              width={24}
+              src={customerReducer.customer?.image}
+            ></img>
+          ) : (
+            <AccountCircle />
+          )}
         </IconButton>
       </Toolbar>
       {renderMenu}
