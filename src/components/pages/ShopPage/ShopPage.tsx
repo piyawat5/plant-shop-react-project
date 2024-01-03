@@ -85,7 +85,7 @@ const ShopPage: React.FC<any> = () => {
     <Box>
       {/* click paging then scroll top page */}
       <div ref={ref}></div>
-      <PageName name="หน้าร้าน"></PageName>
+      <PageName name="ร้านค้า"></PageName>
       <Stack direction={"row"} justifyContent={"space-between"}>
         <Box fontSize={20} mb={1}>
           Filter

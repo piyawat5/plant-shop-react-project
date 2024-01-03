@@ -9,6 +9,10 @@ import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import { SvgIconProps } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import HomeIcon from "@mui/icons-material/Home";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import PaidIcon from "@mui/icons-material/Paid";
+import WidgetsIcon from "@mui/icons-material/Widgets";
 import { Link, useLocation } from "react-router-dom";
 
 const drawerWidth = 240;
@@ -29,17 +33,17 @@ export default function Menu({ open, closeDrawer }: Props) {
   const path = location.pathname;
 
   const menus: Menus[] = [
-    { name: "หน้าแรก", path: "/home", icon: <AccountCircle></AccountCircle> },
-    { name: "ร้านค้า", path: "/shop", icon: <AccountCircle></AccountCircle> },
+    { name: "หน้าแรก", path: "/home", icon: <HomeIcon></HomeIcon> },
+    { name: "ร้านค้า", path: "/shop", icon: <StorefrontIcon></StorefrontIcon> },
     {
       name: "ธุรกรรม",
       path: "/admin-transaction",
-      icon: <AccountCircle></AccountCircle>,
+      icon: <PaidIcon></PaidIcon>,
     },
     {
-      name: "จัดการคลัง",
+      name: "คลังสินค้า",
       path: "/admin-stock",
-      icon: <AccountCircle></AccountCircle>,
+      icon: <WidgetsIcon></WidgetsIcon>,
     },
   ];
 

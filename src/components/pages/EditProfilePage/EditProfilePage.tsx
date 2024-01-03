@@ -21,6 +21,9 @@ const EditProfilePage: React.FC<any> = () => {
   const customerReducer = useSelector(
     (state: RootReducers) => state.customerReducer
   );
+  const uploadReducer = useSelector(
+    (state: RootReducers) => state.uploadReducer
+  );
   const dispatch = useAppDispatch();
   const initial = {
     fname: "",
@@ -104,7 +107,7 @@ const EditProfilePage: React.FC<any> = () => {
             <Button
               onClick={() => navigate("/profile")}
               variant="outlined"
-              disabled={customerReducer.isFetching}
+              disabled={customerReducer.isFetching || uploadReducer.isFetching}
               color="primary"
               type="button"
               fullWidth
@@ -116,7 +119,7 @@ const EditProfilePage: React.FC<any> = () => {
                 color: "#fff",
               }}
               variant="contained"
-              disabled={customerReducer.isFetching}
+              disabled={customerReducer.isFetching || uploadReducer.isFetching}
               color="primary"
               type="submit"
               fullWidth

@@ -7,7 +7,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import Modal, { ModalRoleEnum } from "../../features/Modal/Modal";
 import { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
@@ -106,7 +105,7 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       field: "id",
       headerName: "รหัสอ้างอิง",
-      width: 90,
+      width: 200,
       renderCell: ({ value }: GridRenderCellParams) => (
         <Typography sx={{ marginLeft: 2 }} variant="body1">
           {value}
@@ -116,12 +115,16 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       field: "image",
       headerName: "รูปหลักฐานการโอนเงิน",
-      width: 150,
+      width: 250,
       renderCell: ({ value }: GridRenderCellParams) => {
         return (
           <img
             alt="Tree"
-            src={value}
+            src={
+              value
+                ? value
+                : `${process.env.PUBLIC_URL}/images/pngwing.com (6).png`
+            }
             style={{ width: 80, height: 70, borderRadius: "5%" }}
           ></img>
         );
@@ -130,7 +133,7 @@ const AdminTransactionPage: React.FC<any> = () => {
     {
       field: "customer_id",
       headerName: "รหัสบัญชีผู้ใช้งาน",
-      width: 150,
+      width: 200,
     },
     {
       field: "order_status",
@@ -149,23 +152,36 @@ const AdminTransactionPage: React.FC<any> = () => {
       renderCell: ({ row }: GridRenderCellParams) => (
         <Stack direction={"row"}>
           <IconButton
+            disabled={row.order_status === OrderStatusEnum.PAID}
             onClick={() => {
               setRole(ModalRoleEnum.confirm);
               dispatch(orderIdActions.getOrderById(row.id) as any);
               toggle();
             }}
           >
-            <EditIcon sx={{ color: "rgb(70, 70, 175)" }}></EditIcon>
+            <EditIcon
+              sx={{
+                color:
+                  row.order_status === OrderStatusEnum.PAID
+                    ? "grey"
+                    : "rgb(70, 70, 175)",
+              }}
+            ></EditIcon>
           </IconButton>
           <IconButton
+            disabled={row.order_status === OrderStatusEnum.PAID}
             onClick={() => {
               setRole(ModalRoleEnum.confirmDelete);
-              // dispatch(stockIdActions.getById(row.id));
               toggle();
             }}
           >
             <DeleteForeverIcon
-              sx={{ color: "rgb(201, 45, 45)" }}
+              sx={{
+                color:
+                  row.order_status === OrderStatusEnum.PAID
+                    ? "grey"
+                    : "rgb(201, 45, 45)",
+              }}
             ></DeleteForeverIcon>
           </IconButton>
         </Stack>
@@ -251,7 +267,15 @@ const AdminTransactionPage: React.FC<any> = () => {
             <Box fontSize={20} fontWeight={400}>
               รหัสอ้างอิง {orderIdReducer.order?.id}
             </Box>
-            <img alt="tree" width={250} src={orderIdReducer.order?.image}></img>
+            <img
+              alt="tree"
+              width={250}
+              src={
+                orderIdReducer.order?.image
+                  ? orderIdReducer.order?.image
+                  : `${process.env.PUBLIC_URL}/images/pngwing.com (6).png`
+              }
+            ></img>
             <Stack direction={"column"} gap={1} width={300}>
               <Box>
                 <span style={{ fontWeight: 400 }}>ราคาทั้งหมด: </span>

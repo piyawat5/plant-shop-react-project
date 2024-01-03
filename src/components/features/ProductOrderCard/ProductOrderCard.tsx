@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import "./ProductOrderCard.css";
-import { Box, Stack } from "@mui/material";
+import { Box, IconButton, Stack } from "@mui/material";
 import { NumericFormat } from "react-number-format";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 type ProductOrderCardProps = {
   productName: string;
@@ -72,7 +73,15 @@ const ProductOrderCard: React.FC<ProductOrderCardProps> = ({
           </Stack>
         </Stack>
       </Stack>
-      {!viewMode && <Box onClick={handleClickDelete}>D</Box>}
+      {!viewMode && (
+        <Box onClick={handleClickDelete}>
+          <IconButton>
+            <DeleteForeverIcon
+              sx={{ color: "rgb(201, 45, 45)" }}
+            ></DeleteForeverIcon>
+          </IconButton>
+        </Box>
+      )}
     </Stack>
   );
 };

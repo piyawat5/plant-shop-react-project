@@ -17,7 +17,7 @@ import { NumericFormat } from "react-number-format";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import { Add, Clear } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import ProductTypeDropdown from "../../features/ProductTypeDropdown";
 import SearchProductPrice from "../../features/SearchProductPrice";
 import PageName from "../../features/PageName";

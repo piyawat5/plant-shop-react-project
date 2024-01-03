@@ -1,4 +1,4 @@
-import { Box, Button, Skeleton, Stack, TextField } from "@mui/material";
+import { Box, Button, Stack, TextField } from "@mui/material";
 import { Formik, FormikProps } from "formik";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,6 @@ import UploadImage from "../../../utils/UploadImage";
 import * as productActions from "../../../redux/actions/product.action";
 import { useAppDispatch } from "../../..";
 import ProductTypeDropdown from "../ProductTypeDropdown";
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootReducers } from "../../../redux/reducers";
 
@@ -21,7 +20,25 @@ const StockForm: React.FC<StockFormProps> = ({ action }) => {
   const productIdReducer = useSelector(
     (state: RootReducers) => state.productIdReducer
   );
+  const productReducer = useSelector(
+    (state: RootReducers) => state.productReducer
+  );
+  const uploadReducer = useSelector(
+    (state: RootReducers) => state.uploadReducer
+  );
+  const checkImage = () => {
+    if (action === "ADD") {
+      if (imageUrl) {
+        return imageUrl;
+      }
+      return;
+    }
 
+    if (imageUrl) {
+      return imageUrl;
+    }
+    return productIdReducer.product?.image;
+  };
   const initial = {
     name: "",
     category: { name: "" },
@@ -96,11 +113,11 @@ const StockForm: React.FC<StockFormProps> = ({ action }) => {
             required
           ></TextField>
 
-          <Box>
-            {productIdReducer.product?.image
-              ? productIdReducer.product?.image
-              : imageUrl}
-          </Box>
+          {action === "EDIT" || imageUrl ? (
+            <img alt="product" src={checkImage()}></img>
+          ) : (
+            <></>
+          )}
           <UploadImage
             handleUrl={(url) => {
               setImageUrl(url);
@@ -111,7 +128,7 @@ const StockForm: React.FC<StockFormProps> = ({ action }) => {
             <Button
               onClick={() => navigate("/admin-stock")}
               variant="outlined"
-              // disabled={registerReducer.isFetching}
+              disabled={uploadReducer.isFetching || productReducer.isFetching}
               color="primary"
               type="button"
               fullWidth
@@ -124,7 +141,7 @@ const StockForm: React.FC<StockFormProps> = ({ action }) => {
                   color: "#fff",
                 }}
                 variant="contained"
-                // disabled={registerReducer.isFetching}
+                disabled={uploadReducer.isFetching || productReducer.isFetching}
                 color="primary"
                 type="submit"
                 fullWidth
@@ -137,7 +154,7 @@ const StockForm: React.FC<StockFormProps> = ({ action }) => {
                   color: "#fff",
                 }}
                 variant="contained"
-                // disabled={registerReducer.isFetching}
+                disabled={uploadReducer.isFetching || productReducer.isFetching}
                 color="primary"
                 type="submit"
                 fullWidth
@@ -150,10 +167,6 @@ const StockForm: React.FC<StockFormProps> = ({ action }) => {
       </form>
     );
   };
-
-  // useEffect(() => {
-
-  // }, [])
 
   return (
     <Formik

@@ -1,12 +1,10 @@
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import * as React from "react";
 import PageName from "../../features/PageName";
 import StockForm from "../../features/StockForm";
 import { useMatch } from "react-router-dom";
 import * as productIdAction from "../../../redux/actions/productId.action";
 import { useAppDispatch } from "../../..";
-import { useSelector } from "react-redux";
-import { RootReducers } from "../../../redux/reducers";
 
 // type AdminEditStockPageProps = {
 //   //
