@@ -14,7 +14,9 @@ import ScrollToTop from "./components/features/ScrollToTop";
 
 export const middlewares: Middleware[] = [thunk];
 
-middlewares.push(logger);
+// if (process.env.REACT_APP_IS_PRODUCTION != "1") {
+//   middlewares.push(logger);
+// }
 
 export const store = createStore(reducers, applyMiddleware(...middlewares));
 
