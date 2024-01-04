@@ -47,16 +47,6 @@ export default function App() {
           },
         },
       },
-      MuiDrawer: {
-        styleOverrides: {
-          paper: {
-            backgroundImage:
-              "url(" + `${process.env.PUBLIC_URL}/images/plant-home.png` + ")",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "bottom",
-          },
-        },
-      },
       MuiListItemButton: {
         styleOverrides: {
           root: {
