@@ -15,10 +15,6 @@ import * as orderActions from "../../../redux/actions/order.action";
 import * as productIdActions from "../../../redux/actions/productId.action";
 import { OrderStatusEnum } from "../../types/OrderStatus";
 
-// type CartPageProps = {
-//   //
-// };
-
 const CartPage: React.FC<any> = () => {
   const [quantity, setQuantity] = React.useState(1);
   const navigate = useNavigate();
@@ -100,7 +96,7 @@ const CartPage: React.FC<any> = () => {
           spacing={2}
         >
           <Box fontSize={20} fontWeight={400} textAlign={"right"}>
-            ยอดทั้งหมด: {totalPrice()} บาท
+            ยอดทั้งหมด: {totalPrice() > 0 ? totalPrice() : 0} บาท
           </Box>
           <Button
             onClick={() => {

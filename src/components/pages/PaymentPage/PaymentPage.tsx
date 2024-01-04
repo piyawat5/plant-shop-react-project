@@ -52,6 +52,9 @@ const PaymentPage: React.FC<any> = () => {
   const orderIdReducer = useSelector(
     (state: RootReducers) => state.orderIdReducer
   );
+  const uploadReducer = useSelector(
+    (state: RootReducers) => state.uploadReducer
+  );
   function totalPrice() {
     const result = orderIdReducer.order?.orderDetail.reduce(
       (a: number, b: any) => {
@@ -135,7 +138,8 @@ const PaymentPage: React.FC<any> = () => {
             <Stack spacing={1}>
               <Button
                 disabled={
-                  orderIdReducer.order?.order_status !== OrderStatusEnum.NOTPAID
+                  orderIdReducer.order?.order_status !==
+                    OrderStatusEnum.NOTPAID || uploadReducer.isFetching
                 }
                 onClick={async () => {
                   const body = {
@@ -158,7 +162,8 @@ const PaymentPage: React.FC<any> = () => {
               </Button>
               <Button
                 disabled={
-                  orderIdReducer.order?.order_status !== OrderStatusEnum.NOTPAID
+                  orderIdReducer.order?.order_status !==
+                    OrderStatusEnum.NOTPAID || uploadReducer.isFetching
                 }
                 onClick={() => {
                   dispatch(
@@ -219,7 +224,8 @@ const PaymentPage: React.FC<any> = () => {
             <Stack spacing={1}>
               <Button
                 disabled={
-                  orderIdReducer.order?.order_status !== OrderStatusEnum.NOTPAID
+                  orderIdReducer.order?.order_status !==
+                    OrderStatusEnum.NOTPAID || uploadReducer.isFetching
                 }
                 onClick={async () => {
                   const body = {
@@ -241,6 +247,10 @@ const PaymentPage: React.FC<any> = () => {
                 ยืนยันการโอนเงิน
               </Button>
               <Button
+                disabled={
+                  orderIdReducer.order?.order_status !==
+                    OrderStatusEnum.NOTPAID || uploadReducer.isFetching
+                }
                 onClick={() => {
                   navigate("/cart");
                 }}
@@ -290,7 +300,8 @@ const PaymentPage: React.FC<any> = () => {
             <Stack spacing={1}>
               <Button
                 disabled={
-                  orderIdReducer.order?.order_status !== OrderStatusEnum.NOTPAID
+                  orderIdReducer.order?.order_status !==
+                    OrderStatusEnum.NOTPAID || uploadReducer.isFetching
                 }
                 onClick={async () => {
                   const body = {
@@ -313,7 +324,8 @@ const PaymentPage: React.FC<any> = () => {
               </Button>
               <Button
                 disabled={
-                  orderIdReducer.order?.order_status !== OrderStatusEnum.NOTPAID
+                  orderIdReducer.order?.order_status !==
+                    OrderStatusEnum.NOTPAID || uploadReducer.isFetching
                 }
                 onClick={() => {
                   dispatch(

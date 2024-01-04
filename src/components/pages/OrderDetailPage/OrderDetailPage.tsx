@@ -60,7 +60,7 @@ const OrderDetailPage: React.FC<any> = () => {
         maxHeight={400}
         sx={{ overflowY: "scroll" }}
         spacing={2}
-        pt={4}
+        py={4}
         direction={"column"}
         alignItems={"center"}
       >

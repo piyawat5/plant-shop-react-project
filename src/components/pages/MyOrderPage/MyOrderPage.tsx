@@ -25,7 +25,7 @@ const MyOrderPage: React.FC<any> = () => {
 
   return (
     <Box>
-      <PageName name="รายการสั่งซื้อทั้งหมดของฉัน"></PageName>
+      <PageName name="ออเดอร์ทั้งหมดของฉัน"></PageName>
       <Stack gap={3} alignItems={"center"}>
         {orderReducer.isFetching ? (
           <>

@@ -68,7 +68,7 @@ export default function Navbar({ openDrawer }: Props) {
           navigate("/profile");
         }}
       >
-        Profile
+        โปรไฟล์ของฉัน
       </MenuItem>
       <MenuItem
         onClick={() => {
@@ -77,7 +77,7 @@ export default function Navbar({ openDrawer }: Props) {
           navigate("/my-order");
         }}
       >
-        My orders
+        ออเดอร์ทั้งหมดของฉัน
       </MenuItem>
       <MenuItem
         onClick={() => {
@@ -85,7 +85,7 @@ export default function Navbar({ openDrawer }: Props) {
           dispatch(logoutActions.logoutAction((path) => navigate(path)) as any);
         }}
       >
-        Log out
+        ออกจากระบบ
       </MenuItem>
     </Menu>
   );
