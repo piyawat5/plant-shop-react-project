@@ -26,7 +26,7 @@ export const getCart = (customerId: number) => {
             })
             const order = myOrders.data.find((order: any) => order.order_status === 'CURRENT')
 
-            const res = await axios.get(`${domain}/order/${order.id}`, {
+            const res = await axios.get(`${domain}/order/${order?.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

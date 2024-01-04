@@ -131,7 +131,7 @@ export const deleteOrderFromCart = (orderId: number, productId: number, quantity
     }
 }
 
-export const deleteOrder = (orderId: number) => {
+export const deleteOrder = (orderId: number, next?: () => void) => {
     return async (dispatch: Dispatch<AnyAction>) => {
         try {
             //is fetching
@@ -144,6 +144,9 @@ export const deleteOrder = (orderId: number) => {
             })
 
             dispatch(orderIsSuccess({ orders: null, msg: 'remove order successfully' }))
+            if (next) {
+                next()
+            }
 
 
         } catch (error) {

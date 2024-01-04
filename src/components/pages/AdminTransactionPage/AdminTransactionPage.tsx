@@ -172,6 +172,7 @@ const AdminTransactionPage: React.FC<any> = () => {
             disabled={row.order_status === OrderStatusEnum.PAID}
             onClick={() => {
               setRole(ModalRoleEnum.confirmDelete);
+              dispatch(orderIdActions.getOrderById(row.id) as any);
               toggle();
             }}
           >
@@ -297,7 +298,15 @@ const AdminTransactionPage: React.FC<any> = () => {
           isOpen={isOpen}
           role={ModalRoleEnum.confirmDelete}
           onSubmit={() => {
-            // dispatch(stockActions.deleteStock(stockIdReducer.res?.id));
+            dispatch(
+              orderActions.deleteOrder(orderIdReducer.order?.id, () => {
+                const combinefilter = {
+                  search,
+                  searchOrderStatus,
+                };
+                dispatch(orderActions.getOrders(combinefilter) as any);
+              }) as any
+            );
           }}
           onClose={toggle}
         >
@@ -310,12 +319,7 @@ const AdminTransactionPage: React.FC<any> = () => {
           ) : (
             <Box sx={{ textAlign: "center" }}>
               <h1 className="modal-title">Confirm delete</h1>
-              <img
-                alt="tree"
-                height={200}
-                src={`${process.env.PUBLIC_URL}/images/tree2.png`}
-              ></img>
-              <Box>Do you want to delete 1?</Box>
+              <Box>Do you want to delete {orderIdReducer.order?.id}?</Box>
             </Box>
           )}
         </Modal>

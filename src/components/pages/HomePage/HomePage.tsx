@@ -154,12 +154,15 @@ const HomePage: React.FC<any> = () => {
   ];
 
   React.useEffect(() => {
-    dispatch(productActions.ProductAction() as any);
-    dispatch(
-      customerActions.getCustomerById(
-        loginReducer.authorization.customer.id
-      ) as any
-    );
+    const _getData = async () => {
+      await dispatch(productActions.ProductAction() as any);
+      dispatch(
+        customerActions.getCustomerById(
+          loginReducer.authorization.customer.id
+        ) as any
+      );
+    };
+    _getData();
   }, []);
 
   return (
@@ -171,8 +174,13 @@ const HomePage: React.FC<any> = () => {
           <Grid alignItems={"center"} spacing={3} container marginBottom={5}>
             <Grid item textAlign={"center"} xs={12} sm={12} md={12} lg={6}>
               <Box fontSize={xs ? 20 : 24}>
-                ยินดีต้อนรับ คุณ {customerReducer.customer?.fname}{" "}
-                {customerReducer.customer?.lname}
+                ยินดีต้อนรับ คุณ{" "}
+                {customerReducer.customer?.fname
+                  ? loginReducer.authorization?.fname
+                  : customerReducer.customer?.fname}{" "}
+                {customerReducer.customer?.lname
+                  ? customerReducer.customer?.lname
+                  : loginReducer.authorization?.lname}
               </Box>
               <Box display={"flex"} justifyContent={"center"} width={"100%"}>
                 <Stack

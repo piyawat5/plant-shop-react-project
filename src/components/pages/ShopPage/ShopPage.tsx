@@ -49,7 +49,7 @@ const ShopPage: React.FC<any> = () => {
 
   //Pagination
   let [page, setPage] = React.useState(1);
-  const PER_PAGE = 2;
+  const PER_PAGE = 10;
   const count = Math.ceil(productReducer.products.length / PER_PAGE);
   const _DATA = usePagination(productReducer.products, PER_PAGE);
   const handleChange = (e: any, p: any) => {

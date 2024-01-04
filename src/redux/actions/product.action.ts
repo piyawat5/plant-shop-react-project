@@ -85,6 +85,7 @@ export const ProductAction = (combindSearch?: CombindSearch) => {
             dispatch(ProductIsSuccess(combindSearch ? filterData : data))
 
         } catch (error) {
+            console.log(error)
             dispatch(ProductIsFail())
         }
     }
