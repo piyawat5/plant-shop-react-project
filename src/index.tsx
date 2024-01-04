@@ -14,7 +14,7 @@ import ScrollToTop from "./components/features/ScrollToTop";
 
 export const middlewares: Middleware[] = [thunk];
 
-if (process.env.REACT_APP_IS_PRODUCTION != "0") {
+if (process.env.REACT_APP_IS_PRODUCTION != "1") {
   middlewares.push(logger);
 }
 

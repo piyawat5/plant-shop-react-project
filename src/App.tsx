@@ -51,9 +51,7 @@ export default function App() {
         styleOverrides: {
           paper: {
             backgroundImage:
-              "url(" +
-              `${process.env.PUBLIC_URL}/images/drawer-background.png` +
-              ")",
+              "url(" + `${process.env.PUBLIC_URL}/images/plant-home.png` + ")",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "bottom",
           },
